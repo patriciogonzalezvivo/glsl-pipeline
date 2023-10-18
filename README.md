@@ -13,14 +13,14 @@ All these specs are based 100% on the [glslViewer](https://github.com/patriciogo
 Through your terminal **install** the package:
 
 ```sh
-npm install glsl-sandbox --save
+npm install glsl-pipeline --save
 ```
 
 If you are not using geometry, you just create a new instance of GlslPipeline, load your shader, and start rendering it:
 
 ```js
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
-import { GlslPipeline } from 'glsl-sandbox';
+import { GlslPipeline } from 'glsl-pipeline';
 
 const renderer = new WebGLRenderer();
 const sandbox = new GlslPipeline(renderer, {
@@ -52,7 +52,7 @@ If you want to use geometry you will need to create a scene and a camera, provid
 
 ```js
 import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
-import { GlslPipeline } from 'glsl-sandbox';
+import { GlslPipeline } from 'glsl-pipeline';
 
 const renderer = new WebGLRenderer();
 const glsl_sandbox = new GlslPipeline(renderer, {
@@ -312,7 +312,7 @@ void main() {
 To build/run from source, first `git clone` this repo 
 
 ```sh
-git clone git@github.com:patriciogonzalezvivo/glsl-sandbox.git
+git clone git@github.com:patriciogonzalezvivo/glsl-pipeline.git
 ```
 
 And then:
@@ -345,4 +345,4 @@ Then locally, open the following links with your browser:
 
 ## License
 
-MIT, see [LICENSE.md](http://github.com/patriciogonzalezvivo/glsl-sandbox/blob/master/LICENSE.md) for details.
+MIT, see [LICENSE.md](http://github.com/patriciogonzalezvivo/glsl-pipeline/blob/master/LICENSE.md) for details.

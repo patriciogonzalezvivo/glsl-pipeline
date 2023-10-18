@@ -1,0 +1,39 @@
+{
+  "name": "glsl-pipeline",
+  "version": "1.0.5",
+  "description": "automates GlslViewer multiple buffers pipeline",
+  "main": "index.js",
+  "license": "MIT",
+  "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:patriciogonzalezvivo/glsl-pipeline.git"
+  },
+  "homepage": "https://github.com/patriciogonzalezvivo/glsl-pipeline",
+  "bugs": {
+    "url": "https://github.com/patriciogonzalezvivo/glsl-pipeline/issues"
+  },
+  "keywords": [
+    "glsl",
+    "pipeline",
+    "webgl",
+    "threejs",
+    "three",
+    "buffer",
+    "ping",
+    "pong",
+    "glslViewer"
+  ],
+  "devDependencies": {
+    "vite": "^4.4.9",
+    "resolve-lygia": "^1.0.4"
+  },
+  "dependencies": {
+    "three": "^0.155.0"
+  }
+}

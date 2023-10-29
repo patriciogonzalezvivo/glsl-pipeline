@@ -138,6 +138,21 @@ class GlslPipeline {
             this.addPostprocessing();
     }
 
+    reset() {
+        // Reset time, frame count, and clear double buffers.
+        this.clock = new Clock();
+        this.frame = 0;
+        this.lastTime = 0.0;
+        this.time = 0.0;
+        console.log(this.doubleBuffers);
+        this.doubleBuffers.forEach((buffer) => {
+            buffer.renderTargets.forEach((renderTarget) => {
+                this.renderer.setRenderTarget(renderTarget)
+                this.renderer.clear();
+            })
+        })
+    }
+
     branchMaterial(name) {
         return createShaderMaterial(this.uniforms, this.defines, `#define ${name.toUpperCase()}\n${this.frag_src}`, `#define ${name.toUpperCase()}\n${this.vert_src}`,);
     }

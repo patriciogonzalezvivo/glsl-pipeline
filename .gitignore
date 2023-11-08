@@ -25,3 +25,6 @@ dist-ssr
 *.sw?
 
 .parcel-cache
+
+#Package-lock
+package-lock.json

@@ -16,6 +16,7 @@ const getBabelOptions = ({ useESModules }) => ({
             '@babel/preset-env',
             {
                 include: [
+                    '@babel/plugin-proposal-class-properties',
                     '@babel/plugin-proposal-optional-chaining',
                     '@babel/plugin-proposal-nullish-coalescing-operator',
                     '@babel/plugin-proposal-numeric-separator',
@@ -30,7 +31,10 @@ const getBabelOptions = ({ useESModules }) => ({
         '@babel/preset-react',
         '@babel/preset-typescript',
     ],
-    plugins: [['@babel/transform-runtime', { regenerator: false, useESModules }]],
+    plugins: [
+        '@babel/plugin-proposal-nullish-coalescing-operator',
+        ['@babel/transform-runtime', { regenerator: false, useESModules }]
+    ],
 })
 
 export default [
@@ -51,11 +55,13 @@ export default [
         output: { file: `dist/react.js`, format: 'esm', exports: 'auto'},
         external,
         plugins: [babel(getBabelOptions({ useESModules: true })), resolve({ extensions })],
+        preserveModules: true
     },
     {
         input: `./src/react.ts`,
         output: { file: `dist/react.cjs.js`, format: 'cjs', exports: 'auto'},
         external,
         plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })],
+        preserveModules: true
     },
 ]

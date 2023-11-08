@@ -1,0 +1,60 @@
+{
+  "name": "@glsl-pipeline/react",
+  "version": "1.0.0",
+  "description": "Prototype complex pipelines directly from a single shader by branching it into stages using React Three Fiber/React.",
+  "main": "dist/glsl-pipeline.cjs.min.js",
+  "module": "dist/glsl-pipeline.esm.min.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -c -w"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/patriciogonzalezvivo/glsl-pipeline.git"
+  },
+  "keywords": [
+    "glsl",
+    "pipeline",
+    "webgl",
+    "threejs",
+    "three",
+    "buffer",
+    "ping",
+    "pong",
+    "glslViewer",
+    "react-three-fiber",
+    "r3f",
+    "react"
+  ],
+  "author": "Amin Shazrin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patriciogonzalezvivo/glsl-pipeline/issues"
+  },
+  "homepage": "https://github.com/patriciogonzalezvivo/glsl-pipeline#readme",
+  "peerDependencies": {
+    "react": ">=18.0",
+    "three": ">= 0.138.0",
+    "@react-three/fiber": ">=8.0"
+  },
+  "dependencies": {
+    "glsl-pipeline": "^1.0.6",
+    "zustand": "^4.4.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "@babel/preset-react": "^7.22.15",
+    "@react-three/fiber": "^8.15.10",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "react": "^18.2.0",
+    "rollup": "^2.79.1"
+  }
+}

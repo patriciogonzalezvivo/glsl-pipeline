@@ -1,3 +1,4 @@
+import { RootState } from '@react-three/fiber';
 import * as THREE from 'three';
 
 export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material

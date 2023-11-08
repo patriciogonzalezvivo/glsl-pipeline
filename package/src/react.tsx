@@ -46,9 +46,9 @@ export function useGlslPipeline(callback : any, ref : React.RefObject<GlslPipeli
     }, [ref.current, addCallback, removeCallback, priority]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-const GlslPipelineReact = memo(forwardRef(<T extends MaterialConstructor>({ type  = "scene" , uniforms, fragmentShader, vertexShader, branch, resize = true, autoRender = true, renderPriority = 0, ...props } : GlslPipelineReactProps, ref : React.Ref<any>) => {
+const GlslPipelineReact = ({ type  = "scene" , uniforms, fragmentShader, vertexShader, branch, resize = true, autoRender = true, renderPriority = 0, ...props } : GlslPipelineReactProps, ref : React.Ref<any>) => {
 
-    const threeState = useThree();
+    const threeState = useThree((state) => state);
 
     const callbacks = useRef([]) as React.MutableRefObject<{
         callback: any,
@@ -125,10 +125,12 @@ const GlslPipelineReact = memo(forwardRef(<T extends MaterialConstructor>({ type
     }, [onResize, resize, material]);
 
     return <primitive ref={ref} attach='material' object={material as THREE.Material} {...props} />
-}));
+};
 
-export default GlslPipelineReact as <T extends MaterialConstructor>(
+export default React.forwardRef(GlslPipelineReact) as <T extends MaterialConstructor>(
     props: GlslPipelineReactProps & { ref?: React.Ref<any> }
 ) => JSX.Element;
+
+GlslPipelineReact.displayName = "GlslPipeline"
 
 export * from "./types"

@@ -2,7 +2,6 @@
   "name": "glsl-pipeline-monorepo",
   "private": true,
   "version": "1.0.0",
-  "description": "Prototype complex pipelines directly from a single shader by branching it into stages.",
   "main": "index.js",
   "license": "MIT",
   "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",

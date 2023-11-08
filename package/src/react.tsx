@@ -48,7 +48,7 @@ export function useGlslPipeline(callback : any, ref : React.RefObject<GlslPipeli
 
 const GlslPipelineReact = ({ type  = "scene" , uniforms, fragmentShader, vertexShader, branch, resize = true, autoRender = true, renderPriority = 0, ...props } : GlslPipelineReactProps, ref : React.Ref<any>) => {
 
-    const threeState = useThree((state) => state);
+    const state = useThree((state) => state.get);
 
     const callbacks = useRef([]) as React.MutableRefObject<{
         callback: any,
@@ -73,12 +73,12 @@ const GlslPipelineReact = ({ type  = "scene" , uniforms, fragmentShader, vertexS
 
     const pipeline = useMemo(() => {
 
-        const glsl = new GlslPipeline(threeState.gl, uniforms);
+        const glsl = new GlslPipeline(state().gl, uniforms);
 
         glsl.load(fragmentShader, vertexShader);
 
         return glsl;
-    }, [threeState, uniforms, fragmentShader, vertexShader]);
+    }, [uniforms, fragmentShader, vertexShader]);
 
     useFrame((state) => {
         if (autoRender) {
@@ -95,20 +95,20 @@ const GlslPipelineReact = ({ type  = "scene" , uniforms, fragmentShader, vertexS
 
     const material = useMemo(() => branch ? pipeline.branchMaterial(branch) : pipeline.material, [pipeline, branch]);
 
-    useImperativeHandle(ref, () => pipeline);
+    useImperativeHandle(ref, () => pipeline, [pipeline]);
 
     const onResize = useCallback(() => {
 
-        threeState.gl.setPixelRatio(window.devicePixelRatio);
-        threeState.gl.setSize(threeState.size.width, threeState.size.height);
-        pipeline.setSize(threeState.size.width, threeState.size.height);
+        state().gl.setPixelRatio(window.devicePixelRatio);
+        state().gl.setSize(state().size.width, state().size.height);
+        pipeline.setSize(state().size.width, state().size.height);
 
         if (type === "scene") {
-            threeState.viewport.aspect = threeState.size.width / threeState.size.height;
-            threeState.camera.updateProjectionMatrix();
+            state().viewport.aspect = state().size.width / state().size.height;
+            state().camera.updateProjectionMatrix();
         }
 
-    }, [threeState, pipeline, type]);
+    }, [pipeline, type]);
 
     useEffect(() => {
         if (resize) {
@@ -122,7 +122,7 @@ const GlslPipelineReact = ({ type  = "scene" , uniforms, fragmentShader, vertexS
             }
             material?.dispose();
         }
-    }, [onResize, resize, material]);
+    }, [resize, onResize, material]);
 
     return <primitive ref={ref} attach='material' object={material as THREE.Material} {...props} />
 };

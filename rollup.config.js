@@ -47,14 +47,14 @@ export default [
         plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })],
     },
     {
-        input: `./src/vanilla.ts`,
-        output: { file: `dist/vanilla.js`, format: 'esm', exports: 'auto' },
+        input: `./src/react.ts`,
+        output: { file: `dist/react.js`, format: 'esm', exports: 'auto'},
         external,
         plugins: [babel(getBabelOptions({ useESModules: true })), resolve({ extensions })],
     },
     {
-        input: `./src/vanilla.ts`,
-        output: { file: `dist/vanilla.cjs.js`, format: 'cjs', exports: 'auto' },
+        input: `./src/react.ts`,
+        output: { file: `dist/react.cjs.js`, format: 'cjs', exports: 'auto'},
         external,
         plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })],
     },

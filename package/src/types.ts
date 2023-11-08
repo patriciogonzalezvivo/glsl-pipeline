@@ -40,6 +40,7 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
 }
 
 export interface GlslPipelineReactProps extends React.PropsWithRef<THREE.PropertyBinding> {
+    state: RootState,
     type: "scene" | "main" | null,
     uniforms : Uniform,
     fragmentShader: string,

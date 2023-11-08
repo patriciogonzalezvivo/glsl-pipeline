@@ -1,5 +1,5 @@
 import babel from '@rollup/plugin-babel';
-import resolve from '@rollup/plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import pkg from './package.json';
@@ -16,7 +16,7 @@ export default {
             exclude: 'node_modules/**',
             presets: ['@babel/preset-env', '@babel/preset-react']
         }),
-        resolve(),
+        nodeResolve(),
         commonjs(),
         terser()
     ],

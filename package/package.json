@@ -6,6 +6,7 @@
   "main": "dist/glsl-pipeline.cjs.js",
   "module": "dist/glsl-pipeline.esm.js",
   "types": "dist/glsl-pipeline.cjs.d.ts",
+  "type": "module",
   "files": [
     "dist/**",
     "react/**",

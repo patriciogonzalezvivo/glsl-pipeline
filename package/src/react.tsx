@@ -124,7 +124,7 @@ const GlslPipelineReact = ({ type  = "scene" , uniforms, fragmentShader, vertexS
         }
     }, [resize, onResize, material]);
 
-    return <primitive ref={ref} attach='material' object={material as THREE.Material} {...props} />
+    return <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} {...props} />
 };
 
 export default React.forwardRef(GlslPipelineReact) as <T extends MaterialConstructor>(

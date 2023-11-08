@@ -1,4 +1,4 @@
-import { RootState } from '@react-three/fiber';
+import { RootState, ReactThreeFiber } from '@react-three/fiber';
 import * as THREE from 'three';
 
 export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
@@ -39,8 +39,7 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
     depth?: boolean
 }
 
-export interface GlslPipelineReactProps extends React.PropsWithRef<THREE.PropertyBinding> {
-    state: RootState,
+export interface GlslPipelineReactProps {
     type: "scene" | "main" | null,
     uniforms : Uniform,
     fragmentShader: string,
@@ -48,5 +47,5 @@ export interface GlslPipelineReactProps extends React.PropsWithRef<THREE.Propert
     branch?: string,
     resize: boolean,
     autoRender: boolean,
-    renderPriority: number
+    renderPriority: number,
 }

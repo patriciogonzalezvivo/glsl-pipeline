@@ -15,17 +15,18 @@ import {
 
 import {
     GlslPipeline
-} from "../../index"
+} from "./index"
 
 import { create } from "zustand"
+import { GlslPipelineReactProps, MaterialConstructor } from './types';
 
-const GlslPipelineContext = create(() => ({}));
+const GlslPipelineContext = create(() => ({}) as any);
 
-export function useGlslPipeline(callback, ref, priority = 0) {
+export function useGlslPipeline(callback : any, ref : React.RefObject<GlslPipeline>, priority = 0 as number) {
     const { addCallback, removeCallback } = GlslPipelineContext();
 
-    const filtered = useCallback((pipe) => {
-        return Object.keys(pipe).reduce((res, key) => {
+    const filtered = useCallback((pipe : any) => {
+        return (Object.keys(pipe) as Array<keyof typeof GlslPipeline>).reduce((res : any, key: any) => {
             if (typeof pipe[key] !== 'function') {
                 res[key] = pipe[key];
             }
@@ -45,22 +46,26 @@ export function useGlslPipeline(callback, ref, priority = 0) {
     }, [ref.current, addCallback, removeCallback, priority]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-const GlslPipelineReact = memo(forwardRef(({ type = "scene", uniforms, fragmentShader, vertexShader, branch, resize = true, autoRender = true, renderPriority = 0, ...props }, ref) => {
+const GlslPipelineReact = memo(forwardRef(<T extends MaterialConstructor>({ type  = "scene" , uniforms, fragmentShader, vertexShader, branch, resize = true, autoRender = true, renderPriority = 0, ...props } : GlslPipelineReactProps, ref : React.Ref<any>) => {
 
     const threeState = useThree();
 
-    const callbacks = useRef([]);
+    const callbacks = useRef([]) as React.MutableRefObject<{
+        callback: any,
+        priority: number,
+        pipeline: GlslPipeline
+    }[]>;
 
-    const addCallback = useCallback((callback, priority, pipeline) => {
+    const addCallback = useCallback((callback : any, priority : number, pipeline : GlslPipeline) => {
         callbacks.current.push({ callback, priority, pipeline });
         callbacks.current.sort((a, b) => a.priority - b.priority);
     }, []);
 
-    const removeCallback = useCallback((callback) => {
+    const removeCallback = useCallback((callback : any) => {
         callbacks.current = callbacks.current.filter((cb) => cb.callback !== callback)
     }, []);
 
-    const onRender = useCallback((s) => {
+    const onRender = useCallback((s : any) => {
         for (let i = 0; i < callbacks.current.length; i++) {
             callbacks.current[i].callback(callbacks.current[i].pipeline, s);
         }
@@ -99,7 +104,7 @@ const GlslPipelineReact = memo(forwardRef(({ type = "scene", uniforms, fragmentS
         pipeline.setSize(threeState.size.width, threeState.size.height);
 
         if (type === "scene") {
-            threeState.camera.aspect = threeState.size.width / threeState.size.height;
+            threeState.viewport.aspect = threeState.size.width / threeState.size.height;
             threeState.camera.updateProjectionMatrix();
         }
 
@@ -115,11 +120,15 @@ const GlslPipelineReact = memo(forwardRef(({ type = "scene", uniforms, fragmentS
             if (resize) {
                 window.removeEventListener('resize', onResize, false);
             }
-            material.dispose();
+            material?.dispose();
         }
     }, [onResize, resize, material]);
 
-    return <primitive ref={ref} attach='material' object={material} {...props} />
+    return <primitive ref={ref} attach='material' object={material as THREE.Material} {...props} />
 }));
 
-export default GlslPipelineReact;
+export default GlslPipelineReact as <T extends MaterialConstructor>(
+    props: GlslPipelineReactProps & { ref?: React.Ref<any> }
+) => JSX.Element;
+
+export * from "./types"

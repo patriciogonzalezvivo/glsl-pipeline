@@ -19,8 +19,33 @@ import {
     DepthTexture,
 } from 'three';
 
+import { Uniform, Buffers, DoubleBuffers, SceneBuffers, BufferSize, GlslPipelineRenderTargets } from "./types"
+
 class GlslPipeline {
-    constructor(renderer, uniforms = {}) {
+    public renderer: THREE.WebGLRenderer
+    public defines: { [key:string]: any }
+    public uniforms: Uniform
+    public frag_src: string | null
+    public vert_src: string | null
+    public light: THREE.Light | null
+    public buffers: Array<Buffers>
+    public doubleBuffers: Array<DoubleBuffers>
+    public background: THREE.Material | null
+    public material: THREE.Material | null
+    public sceneBuffer: SceneBuffers | null
+    public postprocessing: THREE.Material | null
+    public billboard_scene: THREE.Scene
+    public billboard_camera: THREE.Camera
+    private passThruUniforms: Uniform
+    private passThruShader: THREE.Material
+    public mesh: THREE.Mesh
+    public clock: THREE.Clock
+    public frame: number
+    public lastTime: number
+    public time: number
+    public resolution: THREE.Vec2
+
+    constructor(renderer: THREE.WebGLRenderer, uniforms = {} as Uniform) {
         if (!renderer.capabilities.floatFragmentTextures)
             throw new Error("No OES_texture_float support for float textures.");
 
@@ -30,7 +55,7 @@ class GlslPipeline {
         this.uniforms = uniforms;
         this.frag_src = null;
         this.vert_src = null;
-        
+
         this.uniforms.u_camera = { value: new Vector3() };
         this.uniforms.u_cameraNearClip = { value: 0.0 };
         this.uniforms.u_cameraFarClip = { value: 0.0 };
@@ -83,7 +108,7 @@ class GlslPipeline {
         }, false);
     }
 
-    getBufferSize(name) {
+    getBufferSize(name: string) : BufferSize {
         if (this.frag_src == null)
             return { width: 1.0, height: 1.0 };
 
@@ -104,19 +129,19 @@ class GlslPipeline {
         return { width: 1.0, height: 1.0 };
     }
 
-    load(frag_src,  vert_src = null) {
+    load(frag_src : string, vert_src = null as string | null) {
         this.frag_src = frag_src;
         this.vert_src = vert_src;
 
-        const found_background = this.frag_src.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*BACKGROUND)(?:\s*\))|(?:#ifdef)(?:\s*BACKGROUND)(?:\s*))/gm);
+        const found_background = this.frag_src?.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*BACKGROUND)(?:\s*\))|(?:#ifdef)(?:\s*BACKGROUND)(?:\s*))/gm);
         if (found_background) {
             this.renderer.autoClearColor = false;
             this.addBackground();
         }
 
-        const found_buffers = this.frag_src.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*BUFFER_)(\d+)(?:\s*\))|(?:#ifdef)(?:\s*BUFFER_)(\d+)(?:\s*))/gm);
+        const found_buffers = this.frag_src?.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*BUFFER_)(\d+)(?:\s*\))|(?:#ifdef)(?:\s*BUFFER_)(\d+)(?:\s*))/gm);
         if (found_buffers)
-            for (let i = 0;i < found_buffers.length;i++) {
+            for (let i = 0; i < found_buffers.length; i++) {
                 let s = this.getBufferSize(`u_buffer${i}`);
                 this.addBuffer(s.width, s.height);
             }
@@ -124,7 +149,7 @@ class GlslPipeline {
         const found_doubleBuffers = frag_src.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*DOUBLE_BUFFER_)(\d+)(?:\s*\))|(?:#ifdef)(?:\s*DOUBLE_BUFFER_)(\d+)(?:\s*))/gm);
         if (found_doubleBuffers) {
             this.renderer.autoClearColor = false;
-            for (let i = 0;i < found_doubleBuffers.length;i++) {
+            for (let i = 0; i < found_doubleBuffers.length; i++) {
                 let s = this.getBufferSize(`u_doubleBuffer${i}`);
                 // console.log(s);
                 this.addDoubleBuffer(s.width, s.height);
@@ -153,7 +178,7 @@ class GlslPipeline {
         })
     }
 
-    branchMaterial(name) {
+    branchMaterial(name: string) {
         return createShaderMaterial(this.uniforms, this.defines, `#define ${name.toUpperCase()}\n${this.frag_src}`, `#define ${name.toUpperCase()}\n${this.vert_src}`,);
     }
 
@@ -162,7 +187,7 @@ class GlslPipeline {
         return this.background;
     }
 
-    addBuffer(width, height) {
+    addBuffer(width : number, height : number) {
         let index = this.buffers.length;
         let material = createShaderMaterial(this.uniforms, this.defines, `#define BUFFER_${index}\n${this.frag_src}`);
         let b = {
@@ -175,7 +200,7 @@ class GlslPipeline {
             wrapT: RepeatWrapping,
             minFilter: LinearFilter,
             magFilter: LinearFilter
-        };
+        } as Buffers;
 
         this.buffers.push(b);
         this.uniforms[b.name] = { value: null };
@@ -185,7 +210,7 @@ class GlslPipeline {
         return b;
     }
 
-    addDoubleBuffer(width, height) {
+    addDoubleBuffer(width : number, height : number) {
         let index = this.doubleBuffers.length;
         let material = createShaderMaterial(this.uniforms, this.defines, `#define DOUBLE_BUFFER_${index}\n${this.frag_src}`);
         let db = {
@@ -198,7 +223,7 @@ class GlslPipeline {
             wrapT: RepeatWrapping,
             minFilter: LinearFilter,
             magFilter: LinearFilter
-        };
+        } as DoubleBuffers;
 
         this.doubleBuffers.push(db);
         this.uniforms[db.name] = { value: null };
@@ -215,7 +240,7 @@ class GlslPipeline {
             renderTarget: null,
             width: this.renderer.domElement.width,
             height: this.renderer.domElement.height,
-        };
+        } as SceneBuffers;
 
         this.uniforms.u_scene = { value: null };
         this.uniforms.u_sceneDepth = { value: null };
@@ -223,8 +248,8 @@ class GlslPipeline {
         this.sceneBuffer.renderTarget = this.createRenderTarget({
             width: this.sceneBuffer.width,
             height: this.sceneBuffer.height,
-            wrapS: null,
-            wrapT: null,
+            wrapS: undefined,
+            wrapT: undefined,
             minFilter: LinearFilter,
             magFilter: LinearFilter,
             depth: true
@@ -233,25 +258,25 @@ class GlslPipeline {
         return this.sceneBuffer;
     }
 
-    setLight(light) {
+    setLight(light : THREE.Light | THREE.AmbientLight | THREE.PointLight | THREE.SpotLight | THREE.DirectionalLight | THREE.RectAreaLight | THREE.HemisphereLight) {
         this.light = light;
-        this.uniforms.u_lightMatrix = { value: this.light.shadow.matrix };
+        this.uniforms.u_lightMatrix = { value: this.light.shadow?.matrix };
         this.uniforms.u_light = { value: this.light.position };
         this.uniforms.u_lightColor = { value: this.light.color };
         this.uniforms.u_lightIntensity = { value: this.light.intensity };
-        this.uniforms.u_lightShadowMap = { value: null};
+        this.uniforms.u_lightShadowMap = { value: null };
         this.defines["LIGHT_SHADOWMAP"] = "u_lightShadowMap";
-        this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow.mapSize.width.toString();
+        this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow?.mapSize.width.toString();
     }
 
-    createRenderTarget(b) {
+    createRenderTarget(b : GlslPipelineRenderTargets) : WebGLRenderTarget {
         b.wrapS = b.wrapS || ClampToEdgeWrapping;
         b.wrapT = b.wrapT || ClampToEdgeWrapping;
 
         b.minFilter = b.minFilter || NearestFilter;
         b.magFilter = b.magFilter || NearestFilter;
 
-        let type = FloatType;
+        let type = FloatType as typeof FloatType | typeof HalfFloatType;
 
         if (this.renderer.capabilities.isWebGL2 === false)
             type = HalfFloatType;
@@ -264,9 +289,9 @@ class GlslPipeline {
             h *= this.renderer.domElement.height;
         }
 
-        let depth = null;
+        let depth : THREE.DepthTexture | undefined = undefined;
         if (b.depth)
-            depth = new DepthTexture();
+            depth = new DepthTexture(w, h);
 
         let renderTarget = new WebGLRenderTarget(Math.floor(w), Math.floor(h), {
             wrapS: b.wrapS,
@@ -282,7 +307,7 @@ class GlslPipeline {
         return renderTarget;
     }
 
-    updateUniforms(camera = null) {
+    updateUniforms(camera = null as THREE.PerspectiveCamera | THREE.OrthographicCamera | null) {
 
         this.time = this.clock.getElapsedTime();
 
@@ -293,7 +318,7 @@ class GlslPipeline {
         this.uniforms.u_resolution.value = this.resolution;
 
         let date = new Date();
-        this.uniforms.u_date.value = new Vector4(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds() + date.getMilliseconds() * 0.001 );
+        this.uniforms.u_date.value = new Vector4(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds() + date.getMilliseconds() * 0.001);
 
         if (camera) {
             this.uniforms.u_camera.value = camera.position;
@@ -312,13 +337,13 @@ class GlslPipeline {
         }
 
         if (this.light) {
-            this.uniforms.u_lightMatrix = { value: this.light.shadow.matrix };
+            this.uniforms.u_lightMatrix = { value: this.light.shadow?.matrix };
             this.uniforms.u_light = { value: this.light.position };
             this.uniforms.u_lightColor = { value: this.light.color };
             this.uniforms.u_lightIntensity = { value: this.light.intensity };
 
-            if (this.light.shadow.map)
-                this.uniforms.u_lightShadowMap = { value: this.light.shadow.map.texture };
+            if (this.light.shadow?.map)
+                this.uniforms.u_lightShadowMap = { value: this.light.shadow?.map.texture };
         }
 
         this.lastTime = this.time;
@@ -327,7 +352,7 @@ class GlslPipeline {
 
     updateBuffers() {
         // Buffers
-        for (let i = 0, il = this.buffers.length;i < il;i++) {
+        for (let i = 0, il = this.buffers.length; i < il; i++) {
             let b = this.buffers[i];
             if (b.width <= 1.0 && b.height <= 1.0)
                 this.uniforms.u_resolution.value = new Vector2(Math.floor(this.resolution.x * b.width), Math.floor(this.resolution.y * b.height));
@@ -335,13 +360,13 @@ class GlslPipeline {
                 this.uniforms.u_resolution.value = new Vector2(b.width, b.height);
 
             this.renderTarget(b.material, b.renderTarget);
-            this.uniforms[b.name].value = b.renderTarget.texture;
+            this.uniforms[b.name].value = b.renderTarget?.texture;
         }
 
         // Double buffers
         let currentTextureIndex = this.frame % 2;
-        let nextTextureIndex = (this.frame+1) % 2;
-        for (let i = 0, il = this.doubleBuffers.length;i < il;i++) {
+        let nextTextureIndex = (this.frame + 1) % 2;
+        for (let i = 0, il = this.doubleBuffers.length; i < il; i++) {
             let db = this.doubleBuffers[i];
             if (db.width <= 1.0 && db.height <= 1.0)
                 this.uniforms.u_resolution.value = new Vector2(Math.floor(this.resolution.x * db.width), Math.floor(this.resolution.y * db.height));
@@ -365,31 +390,31 @@ class GlslPipeline {
         }
     }
 
-    getBufferTexture(index) {
+    getBufferTexture(index : number) : THREE.Texture | undefined {
         if (index >= this.buffers.length)
             return;
 
-        return this.buffers[index].renderTarget.texture;
+        return this.buffers[index].renderTarget?.texture;
     }
 
-    getDoubleBufferTexture(index) {
+    getDoubleBufferTexture(index : number) : THREE.Texture | undefined {
         if (index >= this.doubleBuffers.length)
             return;
 
         return this.doubleBuffers[index].renderTargets[this.frame % 2].texture;
     }
 
-    renderBuffer(index) {
+    renderBuffer(index : number) {
         if (index >= this.buffers.length)
             return;
 
         this.uniforms.u_resolution.value = this.resolution;
-        this.passThruUniforms.texture.value = this.geBufferTexture(index);
+        this.passThruUniforms.texture.value = this.getBufferTexture(index);
         this.mesh.material = this.passThruShader;
         this.renderer.render(this.billboard_scene, this.billboard_camera);
     }
 
-    renderDoubleBuffer(index) {
+    renderDoubleBuffer(index : number) {
         if (index >= this.doubleBuffers.length)
             return;
 
@@ -406,12 +431,12 @@ class GlslPipeline {
 
         this.uniforms.u_resolution.value = this.resolution;
 
-        this.mesh.material = this.material;
+        this.mesh.material = this.material as THREE.Material;
         this.renderer.render(this.billboard_scene, this.billboard_camera);
         this.mesh.material = this.passThruShader;
     }
 
-    renderScene(scene, camera) {
+    renderScene(scene : THREE.Scene, camera : THREE.PerspectiveCamera | THREE.OrthographicCamera) {
         this.updateUniforms(camera);
 
         this.updateBuffers();
@@ -429,43 +454,44 @@ class GlslPipeline {
             this.renderer.clear();
 
             this.uniforms.u_resolution.value = this.resolution;
-            this.uniforms.u_scene.value = this.sceneBuffer.renderTarget.texture;
-            this.uniforms.u_sceneDepth.value = this.sceneBuffer.renderTarget.depthTexture;
+            this.uniforms.u_scene.value = this.sceneBuffer.renderTarget?.texture;
+            this.uniforms.u_sceneDepth.value = this.sceneBuffer.renderTarget?.depthTexture;
 
-            this.mesh.material = this.postprocessing;
+            this.mesh.material = this.postprocessing as THREE.Material;
             this.renderer.render(this.billboard_scene, this.billboard_camera);
             this.mesh.material = this.passThruShader;
         }
     }
 
-    renderTarget(material, output) {
-        this.mesh.material = material;
+    renderTarget(material : THREE.Material | null, output : THREE.WebGLRenderTarget | null) {
+        this.mesh.material = material as THREE.Material;
         this.renderer.setRenderTarget(output);
         // this.renderer.clear();
-        this.renderer.render(this.billboard_scene, this.billboard_camera, output);
+
+        this.renderer.render(this.billboard_scene, this.billboard_camera);
         this.mesh.material = this.passThruShader;
     }
 
-    setSize(width, height) {
+    setSize(width : number, height : number) {
         width *= window.devicePixelRatio;
         height *= window.devicePixelRatio;
 
         if (this.sceneBuffer) {
             this.sceneBuffer.width = width;
             this.sceneBuffer.height = height;
-            this.sceneBuffer.renderTarget.setSize(width, height);
+            this.sceneBuffer.renderTarget?.setSize(width, height);
         }
 
         this.resolution = new Vector2(width, height);
         this.uniforms.u_resolution.value = this.resolution;
 
-        for (let i = 0;i < this.buffers.length;i++) {
+        for (let i = 0; i < this.buffers.length; i++) {
             let b = this.buffers[i];
             if (b.width <= 1.0 && b.height <= 1.0)
-                b.renderTarget.setSize(b.width * width, b.height * height);
+                b.renderTarget?.setSize(b.width * width, b.height * height);
         }
 
-        for (let i = 0;i < this.doubleBuffers.length;i++) {
+        for (let i = 0; i < this.doubleBuffers.length; i++) {
             this.renderer.autoClearColor = false;
             let db = this.doubleBuffers[i];
             if (db.width <= 1.0 && db.height <= 1.0) {
@@ -480,7 +506,7 @@ class GlslPipeline {
     }
 }
 
-function createShaderMaterial(uniforms, defines, fragmentShader, vertexShader) {
+function createShaderMaterial(uniforms: Uniform, defines: { [key:string]: any }, fragmentShader: string, vertexShader = null as null | string) {
     let material = new ShaderMaterial({
         uniforms: uniforms === undefined ? {} : uniforms,
         vertexShader: vertexShader || getPassThroughVertexShader(),
@@ -509,3 +535,5 @@ function getPassThroughFragmentShader() {
 }
 
 export { GlslPipeline };
+
+export * from "./types"

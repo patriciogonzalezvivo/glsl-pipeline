@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "target": "es2018",
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
+        "strict": true,
+        "preserveSymlinks": true,
+        "moduleResolution": "Node",
+        "esModuleInterop": true,
+        "declaration": true,
+        "skipLibCheck": true,
+        "removeComments": false
+    },
+    "include": [
+        "package/src/**/*",
+        "package/test/**/*",
+        "package.json"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.test.ts"
+    ]
+}

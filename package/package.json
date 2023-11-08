@@ -1,17 +1,24 @@
 {
-  "name": "@glsl-pipeline/react",
-  "version": "1.0.0",
+  "name": "glsl-pipeline",
+  "private": false,
+  "version": "1.0.6",
   "description": "Prototype complex pipelines directly from a single shader by branching it into stages using React Three Fiber/React.",
-  "main": "dist/glsl-pipeline.cjs.min.js",
-  "module": "dist/glsl-pipeline.esm.min.js",
-  "sideEffects": false,
-  "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -c -w"
-  },
+  "main": "dist/glsl-pipeline.cjs.js",
+  "module": "dist/glsl-pipeline.esm.js",
+  "types": "dist/glsl-pipeline.cjs.d.ts",
   "files": [
-    "dist/**"
+    "dist/**",
+    "react/**",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
   ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "react.tsx"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/patriciogonzalezvivo/glsl-pipeline.git"
@@ -30,6 +37,10 @@
     "r3f",
     "react"
   ],
+  "scripts": {
+    "dev": "preconstruct watch",
+    "build": "preconstruct build"
+  },
   "author": "Amin Shazrin",
   "license": "MIT",
   "bugs": {
@@ -56,12 +67,31 @@
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.23.2",
     "@react-three/fiber": "^8.15.10",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
+    "@types/react": "^18.2.37",
+    "@types/three": "^0.158.2",
+    "json": "^11.0.0",
     "react": "^18.2.0",
-    "rollup": "^2.79.1"
+    "rollup": "^2.79.1",
+    "three": "^0.158.0",
+    "typescript": "^5.2.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      [
+        "@babel/preset-typescript",
+        {
+          "isTSX": true,
+          "allExtensions": true
+        }
+      ]
+    ]
   }
 }

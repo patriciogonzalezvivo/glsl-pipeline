@@ -1,4 +1,0 @@
-{
-    "main": "dist/glsl-pipeline-react.cjs.js",
-    "module": "dist/glsl-pipeline-react.esm.js"
-}

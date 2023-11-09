@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { GlslPipeline } from "./index"
+
+import { RootState } from "@react-three/fiber"
 
 export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
 
@@ -62,7 +63,7 @@ export interface ZustandStore {
 export interface callbacks {
     callback: any,
     priority: number,
-    pipeline: GlslPipeline
+    pipeline: GlslPipelineProperties
 }
 
 export interface GlslPipelineProperties {

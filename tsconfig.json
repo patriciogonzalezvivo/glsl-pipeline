@@ -1,19 +1,30 @@
 {
     "compilerOptions": {
-        "module": "esnext",
-        "target": "es2018",
-        "allowSyntheticDefaultImports": true,
-        "jsx": "react",
-        "strict": true,
-        "preserveSymlinks": true,
+        "target": "es6",
+        "lib": [
+            "es2019",
+            "dom"
+        ],
+        "module": "CommonJS",
         "moduleResolution": "Node",
-        "esModuleInterop": true,
-        "declaration": true,
+        "esModuleInterop": false,
+        "allowSyntheticDefaultImports": false,
+        "jsx": "react",
+        "pretty": true,
+        "strict": true,
         "skipLibCheck": true,
-        "removeComments": false
+        "declaration": true,
+        "removeComments": true,
+        "emitDeclarationOnly": true,
+        "outDir": "dist",
+        "resolveJsonModule": true,
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "baseUrl": "./package/src"
     },
     "include": [
         "package/src/**/*",
+        "package/src/dist/**/*",
         "package/test/**/*",
         "package.json"
     ],

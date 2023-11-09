@@ -9,7 +9,7 @@
   "type": "module",
   "files": [
     "dist/**",
-    "react/**",
+    "r3f/**",
     "README.md",
     "LICENSE.md",
     "package.json"
@@ -17,7 +17,7 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "react.tsx"
+      "r3f.ts"
     ]
   },
   "repository": {
@@ -67,6 +67,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-modules-commonjs": "^7.23.3",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.2",
@@ -80,6 +82,7 @@
     "json": "^11.0.0",
     "react": "^18.2.0",
     "rollup": "^2.79.1",
+    "rollup-plugin-multi-input": "^1.4.1",
     "three": "^0.158.0",
     "typescript": "^5.2.2"
   },

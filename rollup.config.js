@@ -2,6 +2,7 @@ import path from 'path'
 import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
+import multiInput from 'rollup-plugin-multi-input'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = (id) => !id.startsWith('.') && !id.startsWith(root)
@@ -40,27 +41,50 @@ const getBabelOptions = ({ useESModules }) => ({
 
 export default [
     {
-        input: `./src/index.tsx`,
+        input: `./src/index.ts`,
         output: { file: `dist/index.js`, format: 'esm', exports: 'auto' },
         external,
         plugins: [babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')), resolve({ extensions })]
     },
     {
-        input: `./src/index.tsx`,
+        input: `./src/index.ts`,
         output: { file: `dist/index.cjs.js`, format: 'cjs', exports: 'auto' },
         external,
         plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })]
     },
     {
-        input: `./src/react.ts`,
-        output: { file: `dist/react.js`, format: 'esm', exports: 'auto'},
+        input: ['.src/**/*.ts', '.src/**/*.tsx', '!.src/r3f.ts'],
+        output: { dir: `dist`, format: 'esm' },
+        external,
+        plugins: [
+            multiInput(),
+            babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')),
+            resolve({ extensions }),
+        ],
+    },
+    {
+        input: `./src/r3f.ts`,
+        output: { file: `dist/r3f.js`, format: 'esm', exports: 'auto'},
         external,
         plugins: [babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')), resolve({ extensions })],
         preserveModules: true
     },
     {
-        input: `./src/react.ts`,
-        output: { file: `dist/react.cjs.js`, format: 'cjs', exports: 'auto'},
+        input: ['src/**/*.ts', 'src/**/*.tsx', '!src/r3f.ts'],
+        output: { dir: `dist`, format: 'cjs' },
+        external,
+        plugins: [
+            multiInput({
+                transformOutputPath: (output) => output.replace(/\.[^/.]+$/, '.cjs.js'),
+            }),
+            babel(getBabelOptions({ useESModules: false })),
+            resolve({ extensions }),
+            terser(),
+        ],
+    },
+    {
+        input: `./src/r3f.ts`,
+        output: { file: `dist/r3f.cjs.js`, format: 'cjs', exports: 'auto'},
         external,
         plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions }), terser()]
     },

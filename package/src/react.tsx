@@ -24,7 +24,7 @@ import { GlslPipelineReactProps, MaterialConstructor, ZustandStore, addCallback,
 
 export const GlslPipelineContext = create<ZustandStore>(() => ({}));
 
-export function useGlslPipeline(callback : (props: GlslPipeline, state : RootState) => void, ref : React.RefObject<GlslPipeline>, priority = 0 as number) {
+export function useGlslPipeline(callback: (props: GlslPipeline, state: RootState) => void , ref : React.RefObject<GlslPipeline>, priority = 0 as number){
     const { addCallback, removeCallback } = GlslPipelineContext();
 
     const filtered = useCallback((pipe : any) => {

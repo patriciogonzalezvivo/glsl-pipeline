@@ -43,7 +43,7 @@ export default [
         input: `./src/index.tsx`,
         output: { file: `dist/index.js`, format: 'esm', exports: 'auto' },
         external,
-        plugins: [babel(getBabelOptions({ useESModules: true })), resolve({ extensions })]
+        plugins: [babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')), resolve({ extensions })]
     },
     {
         input: `./src/index.tsx`,
@@ -55,7 +55,7 @@ export default [
         input: `./src/react.ts`,
         output: { file: `dist/react.js`, format: 'esm', exports: 'auto'},
         external,
-        plugins: [babel(getBabelOptions({ useESModules: true })), resolve({ extensions })],
+        plugins: [babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')), resolve({ extensions })],
         preserveModules: true
     },
     {

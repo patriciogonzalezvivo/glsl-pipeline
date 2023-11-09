@@ -15,6 +15,7 @@ const getBabelOptions = ({ useESModules }) => ({
     babelHelpers: 'runtime',
     presets: [
         [
+            '@babel/preset-flow',
             '@babel/preset-env',
             {
                 include: [
@@ -31,7 +32,7 @@ const getBabelOptions = ({ useESModules }) => ({
             },
         ],
         '@babel/preset-react',
-        '@babel/preset-typescript',
+        '@babel/preset-typescript'
     ],
     plugins: [
         "@babel/plugin-transform-class-properties",
@@ -42,7 +43,7 @@ const getBabelOptions = ({ useESModules }) => ({
 
 export default [
     {
-        input: ['.src/*.tsx', '!.src/index.ts'],
+        input: ['./src/**/*.ts', '.src/*.tsx', '!.src/index.ts'],
         output: { dir: `dist`, format: 'esm' },
         external,
         plugins: [
@@ -58,7 +59,7 @@ export default [
         plugins: [babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')), resolve({ extensions })]
     },
     {
-        input: ['src/*.tsx', '!src/index.ts'],
+        input: ['./src/**/*.ts', 'src/*.tsx', '!src/index.ts'],
         output: { dir: `dist`, format: 'cjs' },
         external,
         plugins: [

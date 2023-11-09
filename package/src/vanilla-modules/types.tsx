@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { GlslPipeline } from "./index"
+import { GlslPipeline } from "../index"
 
 export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
 

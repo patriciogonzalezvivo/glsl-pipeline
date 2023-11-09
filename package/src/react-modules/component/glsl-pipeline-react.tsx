@@ -15,7 +15,7 @@ import {
 } from "../hooks"
 
 import { GlslPipelineReactProps, addCallback, callbacks, removeCallback } from '../helper/types';
-import { ForwardRefComponent } from 'modules/helper/ts-utils';
+import { ForwardRefComponent } from 'react-modules/helper/ts-utils';
 
 export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, GlslPipeline> = /* @__PURE__ */ React.forwardRef(({ type = "scene", uniforms, fragmentShader, vertexShader, branch, resize = true, autoRender = true, renderPriority = 0, ...props }: GlslPipelineReactProps, ref: React.Ref<GlslPipeline>) => {
 

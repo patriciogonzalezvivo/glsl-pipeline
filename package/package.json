@@ -54,14 +54,6 @@
     "react": ">=18.0",
     "three": ">=0.154"
   },
-  "peerDependenciesMeta": {
-    "@react-three/fiber": {
-      "optional": true
-    },
-    "react": {
-      "optional": true
-    }
-  },
   "dependencies": {
     "@babel/runtime": "^7.23.2",
     "zustand": "^4.4.6"
@@ -72,6 +64,7 @@
     "@babel/plugin-transform-class-properties": "^7.23.3",
     "@babel/plugin-transform-modules-commonjs": "^7.23.3",
     "@babel/preset-env": "^7.23.2",
+    "@babel/preset-flow": "^7.23.3",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.2",
     "@react-three/fiber": "^8.15.10",
@@ -87,18 +80,5 @@
     "rollup-plugin-multi-input": "^1.4.1",
     "three": "^0.158.0",
     "typescript": "^5.2.2"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react",
-      [
-        "@babel/preset-typescript",
-        {
-          "isTSX": true,
-          "allExtensions": true
-        }
-      ]
-    ]
   }
 }

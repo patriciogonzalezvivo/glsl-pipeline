@@ -1,1 +1,1 @@
-export * from "./vanilla"
+export * from "./vanilla-modules"

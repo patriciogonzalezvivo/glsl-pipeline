@@ -10,7 +10,9 @@ import React, {
 
 import {
     useFrame,
-    useThree
+    useThree,
+    ReactThreeFiber,
+    RootState
 } from "@react-three/fiber"
 
 import {
@@ -18,11 +20,11 @@ import {
 } from "./index"
 
 import { create } from "zustand"
-import { GlslPipelineReactProps, MaterialConstructor } from './types';
+import { GlslPipelineReactProps, MaterialConstructor, ZustandStore, addCallback, callbacks, removeCallback } from './types';
 
-const GlslPipelineContext = create(() => ({}) as any);
+export const GlslPipelineContext = create<ZustandStore>(() => ({}));
 
-export function useGlslPipeline(callback : any, ref : React.RefObject<GlslPipeline>, priority = 0 as number) {
+export function useGlslPipeline(callback : (props: GlslPipeline, state : RootState) => void, ref : React.RefObject<GlslPipeline>, priority = 0 as number) {
     const { addCallback, removeCallback } = GlslPipelineContext();
 
     const filtered = useCallback((pipe : any) => {
@@ -50,18 +52,14 @@ const GlslPipelineReact = ({ type  = "scene" , uniforms, fragmentShader, vertexS
 
     const state = useThree((state) => state.get);
 
-    const callbacks = useRef([]) as React.MutableRefObject<{
-        callback: any,
-        priority: number,
-        pipeline: GlslPipeline
-    }[]>;
+    const callbacks = useRef([]) as React.MutableRefObject<callbacks[]>;
 
-    const addCallback = useCallback((callback : any, priority : number, pipeline : GlslPipeline) => {
+    const addCallback = useCallback<addCallback>((callback : any, priority : number, pipeline : GlslPipeline) => {
         callbacks.current.push({ callback, priority, pipeline });
         callbacks.current.sort((a, b) => a.priority - b.priority);
     }, []);
 
-    const removeCallback = useCallback((callback : any) => {
+    const removeCallback = useCallback<removeCallback>((callback : any) => {
         callbacks.current = callbacks.current.filter((cb) => cb.callback !== callback)
     }, []);
 

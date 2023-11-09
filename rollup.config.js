@@ -1,6 +1,7 @@
 import path from 'path'
 import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
+import terser from '@rollup/plugin-terser'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
 const external = (id) => !id.startsWith('.') && !id.startsWith(root)
@@ -42,13 +43,13 @@ export default [
         input: `./src/index.tsx`,
         output: { file: `dist/index.js`, format: 'esm', exports: 'auto' },
         external,
-        plugins: [babel(getBabelOptions({ useESModules: true })), resolve({ extensions })],
+        plugins: [babel(getBabelOptions({ useESModules: true })), resolve({ extensions })]
     },
     {
         input: `./src/index.tsx`,
         output: { file: `dist/index.cjs.js`, format: 'cjs', exports: 'auto' },
         external,
-        plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })],
+        plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })]
     },
     {
         input: `./src/react.ts`,
@@ -61,7 +62,6 @@ export default [
         input: `./src/react.ts`,
         output: { file: `dist/react.cjs.js`, format: 'cjs', exports: 'auto'},
         external,
-        plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })],
-        preserveModules: true
+        plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions }), terser()]
     },
 ]

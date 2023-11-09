@@ -1,5 +1,6 @@
 import { RootState, ReactThreeFiber } from '@react-three/fiber';
 import * as THREE from 'three';
+import { GlslPipeline } from "../src/index"
 
 export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
 
@@ -48,4 +49,19 @@ export interface GlslPipelineReactProps {
     resize: boolean,
     autoRender: boolean,
     renderPriority: number,
+}
+
+export type addCallback = (callback: any, priority: number, pipeline: GlslPipeline) => void;
+
+export type removeCallback = (callback: any) => void
+
+export interface ZustandStore {
+    addCallback?: addCallback
+    removeCallback?: removeCallback
+}
+
+export interface callbacks {
+    callback: any,
+    priority: number,
+    pipeline: GlslPipeline
 }

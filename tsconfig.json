@@ -17,7 +17,6 @@
         "removeComments": true,
         "emitDeclarationOnly": true,
         "outDir": "dist",
-        "resolveJsonModule": true,
         "noImplicitAny": false,
         "noImplicitThis": false,
         "baseUrl": "./package/src"

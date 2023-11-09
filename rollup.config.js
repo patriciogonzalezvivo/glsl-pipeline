@@ -34,6 +34,7 @@ const getBabelOptions = ({ useESModules }) => ({
         '@babel/preset-typescript',
     ],
     plugins: [
+        "@babel/plugin-transform-class-properties",
         '@babel/plugin-proposal-nullish-coalescing-operator',
         ['@babel/transform-runtime', { regenerator: false, useESModules }]
     ],
@@ -41,10 +42,33 @@ const getBabelOptions = ({ useESModules }) => ({
 
 export default [
     {
+        input: ['.src/*.tsx', '!.src/index.ts'],
+        output: { dir: `dist`, format: 'esm' },
+        external,
+        plugins: [
+            multiInput(),
+            babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')),
+            resolve({ extensions })
+        ],
+    },
+    {
         input: `./src/index.ts`,
         output: { file: `dist/index.js`, format: 'esm', exports: 'auto' },
         external,
         plugins: [babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')), resolve({ extensions })]
+    },
+    {
+        input: ['src/*.tsx', '!src/index.ts'],
+        output: { dir: `dist`, format: 'cjs' },
+        external,
+        plugins: [
+            multiInput({
+                transformOutputPath: (output) => output.replace(/\.[^/.]+$/, '.cjs.js'),
+            }),
+            babel(getBabelOptions({ useESModules: false })),
+            resolve({ extensions }),
+            terser(),
+        ],
     },
     {
         input: `./src/index.ts`,

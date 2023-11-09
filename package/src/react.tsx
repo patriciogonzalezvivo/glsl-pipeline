@@ -1,9 +1,7 @@
 import React, {
-    forwardRef,
     useCallback,
     useRef,
     useMemo,
-    memo,
     useEffect,
     useImperativeHandle
 } from 'react'
@@ -11,7 +9,6 @@ import React, {
 import {
     useFrame,
     useThree,
-    ReactThreeFiber,
     RootState
 } from "@react-three/fiber"
 

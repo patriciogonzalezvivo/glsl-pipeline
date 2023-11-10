@@ -56,7 +56,7 @@ class GlslPipeline {
         this.frag_src = null;
         this.vert_src = null;
 
-        this.uniforms.u_camera = { value: new Vector3() };
+        this.uniforms.u_camera = { value: /* @__PURE__ */ new Vector3() };
         this.uniforms.u_cameraNearClip = { value: 0.0 };
         this.uniforms.u_cameraFarClip = { value: 0.0 };
         this.uniforms.u_cameraDistance = { value: 0.0 };
@@ -68,12 +68,12 @@ class GlslPipeline {
         this.uniforms.u_normalMatrix = { value: null };
         this.uniforms.u_modelMatrix = { value: null };
 
-        this.uniforms.u_resolution = { value: new Vector2() };
-        this.uniforms.u_mouse = { value: new Vector2() };
+        this.uniforms.u_resolution = { value: /* @__PURE__ */ new Vector2() };
+        this.uniforms.u_mouse = { value: /* @__PURE__ */ new Vector2() };
         this.uniforms.u_delta = { value: 0.0 };
         this.uniforms.u_time = { value: 0.0 };
         this.uniforms.u_frame = { value: 0 };
-        this.uniforms.u_date = { value: new Vector4() };
+        this.uniforms.u_date = { value: /* @__PURE__ */ new Vector4() };
 
         this.light = null;
 
@@ -84,20 +84,20 @@ class GlslPipeline {
         this.sceneBuffer = null;
         this.postprocessing = null;
 
-        this.billboard_scene = new Scene();
-        this.billboard_camera = new Camera();
+        this.billboard_scene = /* @__PURE__ */ new Scene();
+        this.billboard_camera = /* @__PURE__ */ new Camera();
         this.billboard_camera.position.z = 1;
         this.passThruUniforms = { texture: { value: null } };
         this.passThruShader = createShaderMaterial(this.passThruUniforms, {}, getPassThroughFragmentShader());
 
-        this.mesh = new Mesh(new PlaneGeometry(2, 2), this.passThruShader);
+        this.mesh = /* @__PURE__ */ new Mesh(new PlaneGeometry(2, 2), this.passThruShader);
         this.billboard_scene.add(this.mesh);
 
-        this.clock = new Clock();
+        this.clock = /* @__PURE__ */ new Clock();
         this.frame = 0;
         this.lastTime = 0.0;
         this.time = 0.0;
-        this.resolution = new Vector2(renderer.domElement.width, renderer.domElement.height);
+        this.resolution = /* @__PURE__ */ new Vector2(renderer.domElement.width, renderer.domElement.height);
 
         document.addEventListener('mousemove', (e) => {
             let rect = renderer.domElement.getBoundingClientRect();
@@ -291,9 +291,9 @@ class GlslPipeline {
 
         let depth: THREE.DepthTexture | undefined = undefined;
         if (b.depth)
-            depth = new DepthTexture(w, h);
+            depth = /* @__PURE__ */ new DepthTexture(w, h);
 
-        let renderTarget = new WebGLRenderTarget(Math.floor(w), Math.floor(h), {
+        let renderTarget = /* @__PURE__ */ new WebGLRenderTarget(Math.floor(w), Math.floor(h), {
             wrapS: b.wrapS,
             wrapT: b.wrapT,
             minFilter: b.minFilter,
@@ -318,7 +318,7 @@ class GlslPipeline {
         this.uniforms.u_resolution.value = this.resolution;
 
         let date = new Date();
-        this.uniforms.u_date.value = new Vector4(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds() + date.getMilliseconds() * 0.001);
+        this.uniforms.u_date.value = /* @__PURE__ */ new Vector4(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds() + date.getMilliseconds() * 0.001);
 
         if (camera) {
             this.uniforms.u_camera.value = camera.position;
@@ -355,9 +355,9 @@ class GlslPipeline {
         for (let i = 0, il = this.buffers.length; i < il; i++) {
             let b = this.buffers[i];
             if (b.width <= 1.0 && b.height <= 1.0)
-                this.uniforms.u_resolution.value = new Vector2(Math.floor(this.resolution.x * b.width), Math.floor(this.resolution.y * b.height));
+                this.uniforms.u_resolution.value = /* @__PURE__ */ new Vector2(Math.floor(this.resolution.x * b.width), Math.floor(this.resolution.y * b.height));
             else
-                this.uniforms.u_resolution.value = new Vector2(b.width, b.height);
+                this.uniforms.u_resolution.value = /* @__PURE__ */ new Vector2(b.width, b.height);
 
             this.renderTarget(b.material, b.renderTarget);
             this.uniforms[b.name].value = b.renderTarget?.texture;
@@ -482,7 +482,7 @@ class GlslPipeline {
             this.sceneBuffer.renderTarget?.setSize(width, height);
         }
 
-        this.resolution = new Vector2(width, height);
+        this.resolution = /* @__PURE__ */ new Vector2(width, height);
         this.uniforms.u_resolution.value = this.resolution;
 
         for (let i = 0; i < this.buffers.length; i++) {
@@ -507,7 +507,7 @@ class GlslPipeline {
 }
 
 function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, fragmentShader: string, vertexShader = null as null | string) {
-    let material = new ShaderMaterial({
+    let material = /* @__PURE__ */ new ShaderMaterial({
         uniforms: uniforms === undefined ? {} : uniforms,
         vertexShader: vertexShader || getPassThroughVertexShader(),
         fragmentShader,

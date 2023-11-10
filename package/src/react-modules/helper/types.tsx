@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 
-import { RootState } from "@react-three/fiber"
+import { ReactThreeFiber } from "@react-three/fiber"
+
+import { Assign } from "utility-types"
+
+import { GlslPipeline } from 'vanilla-modules';
 
 export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
 
@@ -22,7 +26,6 @@ export interface DoubleBuffers extends THREE.RenderTargetOptions {
     height: number
 }
 
-
 export interface SceneBuffers {
     renderTarget: THREE.WebGLRenderTarget | null,
     width: number,
@@ -40,8 +43,8 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
     depth?: boolean
 }
 
-export interface GlslPipelineReactProps {
-    type: "scene" | "main" | null,
+export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipeline>, 'ref'> {
+    type: "scene" | "main" | undefined,
     uniforms : Uniform,
     fragmentShader: string,
     vertexShader?: string | null,

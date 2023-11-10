@@ -52,9 +52,10 @@
   "peerDependencies": {
     "@react-three/fiber": ">=8.0",
     "react": ">=18.0",
-    "three": ">=0.154"
+    "three": ">=0.137"
   },
   "dependencies": {
+    "utility-types": "^3.10.0",
     "zustand": "^4.4.6"
   },
   "devDependencies": {

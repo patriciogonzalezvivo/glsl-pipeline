@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { GlslPipeline } from "../index"
 
-export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
-
 export type Uniform = { [key: string]: THREE.IUniform<any> }
 
 export interface Buffers extends THREE.RenderTargetOptions {
@@ -37,32 +35,6 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
     width: number,
     height: number
     depth?: boolean
-}
-
-export interface GlslPipelineReactProps {
-    type: "scene" | "main" | null,
-    uniforms : Uniform,
-    fragmentShader: string,
-    vertexShader?: string | null,
-    branch?: string,
-    resize: boolean,
-    autoRender: boolean,
-    renderPriority: number,
-}
-
-export type addCallback = (callback: any, priority: number, pipeline: GlslPipelineProperties) => void;
-
-export type removeCallback = (callback: any) => void
-
-export interface ZustandStore {
-    addCallback?: addCallback
-    removeCallback?: removeCallback
-}
-
-export interface callbacks {
-    callback: any,
-    priority: number,
-    pipeline: GlslPipeline
 }
 
 export interface GlslPipelineProperties {

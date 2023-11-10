@@ -15,8 +15,6 @@ const getBabelOptions = ({ useESModules }) => ({
     babelHelpers: 'runtime',
     presets: [
         [
-            '@babel/preset-flow',
-            '@babel/preset-env',
             {
                 include: [
                     '@babel/plugin-proposal-class-properties',
@@ -30,9 +28,7 @@ const getBabelOptions = ({ useESModules }) => ({
                 modules: false,
                 targets: '> 1%, not dead, not ie 11, not op_mini all',
             },
-        ],
-        '@babel/preset-react',
-        '@babel/preset-typescript'
+        ]
     ],
     plugins: [
         "@babel/plugin-transform-class-properties",

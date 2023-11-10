@@ -54,6 +54,14 @@
     "react": ">=18.0",
     "three": ">=0.137"
   },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "utility-types": "^3.10.0",
     "zustand": "^4.4.6"

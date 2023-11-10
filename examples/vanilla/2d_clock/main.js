@@ -1,30 +1,22 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, shrink-to-fit=0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <title>glsl-pipeline</title>
-  </head>
-  <body style="margin: 0">
-    <script type="module">
-      import { WebGLRenderer, PerspectiveCamera, Scene, BoxGeometry, ShaderMaterial, Mesh, Vector2, Vector3 } from 'three';
-      import { resolveLygia } from 'resolve-lygia';
+import './style.css'
+import { WebGLRenderer, PerspectiveCamera, Scene, BoxGeometry, ShaderMaterial, Mesh, Vector2, Vector3 } from 'three';
+import { resolveLygia } from 'resolve-lygia';
 
-      import { GlslPipeline } from '../package/dist/';
+import { GlslPipeline } from 'glsl-pipeline';
 
-      let W = window,
-          D = document;
+let W = window,
+  D = document.querySelector('#app');
 
-      let width = W.innerWidth;
-      let height = W.innerHeight;
-      let pixelRatio = W.devicePixelRatio;
+let width = W.innerWidth;
+let height = W.innerHeight;
+let pixelRatio = W.devicePixelRatio;
 
-      const renderer = new WebGLRenderer();
-      renderer.setPixelRatio(pixelRatio);
-      renderer.setSize(width, height);
-      D.body.appendChild(renderer.domElement);
+const renderer = new WebGLRenderer();
+renderer.setPixelRatio(pixelRatio);
+renderer.setSize(width, height);
+D.appendChild(renderer.domElement);
 
-      const shader_frag = resolveLygia(/* glsl */`
+const shader_frag = resolveLygia(/* glsl */`
         uniform sampler2D   u_buffer0; // 256x256
         uniform sampler2D   u_buffer1; // 256x256
 
@@ -98,30 +90,27 @@
             gl_FragColor = vec4(color, 1.);
         }`);
 
-      // GLSL Buffers
-      const glsl_sandbox = new GlslPipeline(renderer);
-      glsl_sandbox.load(shader_frag);
+// GLSL Buffers
+const glsl_sandbox = new GlslPipeline(renderer);
+glsl_sandbox.load(shader_frag);
 
-      const draw = () => {
-          glsl_sandbox.renderMain();
-          requestAnimationFrame(draw);
-      };
+const draw = () => {
+  glsl_sandbox.renderMain();
+  requestAnimationFrame(draw);
+};
 
-      const resize = () => {
-          width = W.innerWidth;
-          height = W.innerHeight;
-          pixelRatio = W.devicePixelRatio;
+const resize = () => {
+  width = W.innerWidth;
+  height = W.innerHeight;
+  pixelRatio = W.devicePixelRatio;
 
-          renderer.setPixelRatio(pixelRatio);
-          renderer.setSize(width, height);
+  renderer.setPixelRatio(pixelRatio);
+  renderer.setSize(width, height);
 
-          glsl_sandbox.setSize(width, height);
-      };
+  glsl_sandbox.setSize(width, height);
+};
 
-      W.addEventListener("resize", resize);
-      resize();
+W.addEventListener("resize", resize);
+resize();
 
-      draw();
-    </script>
-  </body>
-</html>
+draw();

@@ -39,7 +39,7 @@ const getBabelOptions = ({ useESModules }) => ({
 
 export default [
     {
-        input: ['./src/**/*.ts', '.src/*.tsx', '!.src/index.ts'],
+        input: ['./src/vanilla-modules/*.ts', './src/vanilla-modules/*.tsx', '!./src/index.ts'],
         output: { dir: `dist`, format: 'esm' },
         external,
         plugins: [
@@ -55,7 +55,7 @@ export default [
         plugins: [babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')), resolve({ extensions })]
     },
     {
-        input: ['./src/**/*.ts', 'src/*.tsx', '!src/index.ts'],
+        input: ['./src/vanilla-modules/*.ts', './src/vanilla-modules/*.tsx', '!./src/index.ts', '!./src/vanilla-modules/types.ts'],
         output: { dir: `dist`, format: 'cjs' },
         external,
         plugins: [
@@ -74,7 +74,7 @@ export default [
         plugins: [babel(getBabelOptions({ useESModules: false })), resolve({ extensions })]
     },
     {
-        input: ['.src/**/*.ts', '.src/**/*.tsx', '!.src/r3f.ts'],
+        input: ['./src/react-modules/*.ts', './src/react-modules/*.tsx', '!./src/r3f.ts'],
         output: { dir: `dist`, format: 'esm' },
         external,
         plugins: [
@@ -91,7 +91,7 @@ export default [
         preserveModules: true
     },
     {
-        input: ['src/**/*.ts', 'src/**/*.tsx', '!src/r3f.ts'],
+        input: ['./src/react-modules/*.ts', './src/react-modules/*.tsx', '!./src/r3f.ts'],
         output: { dir: `dist`, format: 'cjs' },
         external,
         plugins: [

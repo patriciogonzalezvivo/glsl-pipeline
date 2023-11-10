@@ -7,7 +7,7 @@
   "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",
   "scripts": {
     "build": "preconstruct build",
-    "dev": "preconstruct dev && yarn workspace waves dev",
+    "dev-vanilla": "preconstruct dev && yarn workspace 3d_trails dev",
     "postinstall": "preconstruct dev && manypkg check",
     "ci": "preconstruct validate && manypkg check && yarn build",
     "release": "chmod +x ./scripts/release.sh && ./scripts/release.sh",
@@ -17,7 +17,7 @@
   "workspaces": {
     "packages": [
       "package",
-      "examples/*"
+      "examples/**/*"
     ]
   },
   "preconstruct": {

@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { GlslPipeline } from "../index"
 
 export type Uniform = { [key: string]: THREE.IUniform<any> }
 
@@ -18,7 +17,6 @@ export interface DoubleBuffers extends THREE.RenderTargetOptions {
     width: number,
     height: number
 }
-
 
 export interface SceneBuffers {
     renderTarget: THREE.WebGLRenderTarget | null,
@@ -52,8 +50,8 @@ export interface GlslPipelineProperties {
     postprocessing: THREE.Material | null,
     billboard_scene: THREE.Scene,
     billboard_camera: THREE.Camera,
-     passThruUniforms: Uniform,
-     passThruShader: THREE.Material,
+    passThruUniforms: Uniform,
+    passThruShader: THREE.Material,
     mesh: THREE.Mesh,
     clock: THREE.Clock,
     frame: number,

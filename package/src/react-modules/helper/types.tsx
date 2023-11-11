@@ -1,9 +1,5 @@
 import * as THREE from 'three';
 
-import { ReactThreeFiber } from "@react-three/fiber"
-
-import { Assign } from "utility-types"
-
 import { GlslPipeline } from 'vanilla-modules';
 
 export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
@@ -48,7 +44,7 @@ export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipeline>, 'r
     uniforms : Uniform,
     fragmentShader: string,
     vertexShader?: string | null,
-    branch?: string,
+    branch?: string | Array<string>,
     resize: boolean,
     autoRender: boolean,
     renderPriority: number,
@@ -84,8 +80,8 @@ export interface GlslPipelineProperties {
     postprocessing: THREE.Material | null,
     billboard_scene: THREE.Scene,
     billboard_camera: THREE.Camera,
-     passThruUniforms: Uniform,
-     passThruShader: THREE.Material,
+    passThruUniforms: Uniform,
+    passThruShader: THREE.Material,
     mesh: THREE.Mesh,
     clock: THREE.Clock,
     frame: number,

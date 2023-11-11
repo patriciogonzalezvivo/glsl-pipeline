@@ -178,8 +178,13 @@ class GlslPipeline {
         })
     }
 
-    branchMaterial(name: string) {
-        return createShaderMaterial(this.uniforms, this.defines, `#define ${name.toUpperCase()}\n${this.frag_src}`, `#define ${name.toUpperCase()}\n${this.vert_src}`,);
+    branchMaterial(name: string | Array<string>) {
+        if(typeof name !== 'string') {
+            return createShaderMaterial(this.uniforms, this.defines, `${name.map((str) => `#define ${str.toUpperCase()}\n`).join(',').replace(',', '')}${this.frag_src}`, `${name.map((str) => `#define ${str.toUpperCase()}\n`).join(',').replace(',', '')}${this.vert_src}`,);
+        }
+        else {
+            return createShaderMaterial(this.uniforms, this.defines, `#define ${name.toUpperCase()}\n${this.frag_src}`, `#define ${name.toUpperCase()}\n${this.vert_src}`,);
+        }
     }
 
     addBackground() {

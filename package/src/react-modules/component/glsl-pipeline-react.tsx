@@ -17,9 +17,22 @@ import {
 import { GlslPipelineReactProps, addCallback, callbacks, removeCallback } from '../helper/types';
 import { ForwardRefComponent } from 'react-modules/helper/ts-utils';
 
-export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, GlslPipeline> = /* @__PURE__ */ React.forwardRef<GlslPipeline, GlslPipelineReactProps>(({ type = "scene", uniforms, fragmentShader, vertexShader, branch, resize = true, autoRender = true, renderPriority = 0, ...props }, ref) => {
+export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, GlslPipeline> = /* @__PURE__ */ React.forwardRef<GlslPipeline, GlslPipelineReactProps>((
+    { 
+        type = "scene", 
+        uniforms, 
+        fragmentShader, 
+        vertexShader, 
+        branch, 
+        resize = true, 
+        autoRender = true, 
+        renderPriority = 0, 
+        ...props 
+    }, 
+        ref
+    ) => {
 
-    const state = useThree((state) => state.get);
+    const { gl, camera, viewport, size } = useThree();
 
     const callbacks = React.useRef<callbacks[]>([]);
 
@@ -40,7 +53,7 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
 
     const pipeline = React.useMemo<GlslPipeline>(() => {
 
-        const glsl = new GlslPipeline(state().gl, uniforms);
+        const glsl = new GlslPipeline(gl, uniforms);
 
         glsl.load(fragmentShader, vertexShader);
 
@@ -66,13 +79,15 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
 
     const onResize = React.useCallback(() => {
 
-        state().gl.setPixelRatio(window.devicePixelRatio);
-        state().gl.setSize(state().size.width, state().size.height);
-        pipeline.setSize(state().size.width, state().size.height);
+        if(!type) return;
 
-        if (type === "scene") {
-            state().viewport.aspect = state().size.width / state().size.height;
-            state().camera.updateProjectionMatrix();
+        gl.setPixelRatio(window.devicePixelRatio);
+        gl.setSize(size.width, size.height);
+        pipeline.setSize(size.width, size.height);
+
+        if (type === 'scene') {
+            viewport.aspect = size.width / size.height;
+            camera.updateProjectionMatrix();
         }
 
     }, [pipeline, type]);
@@ -93,3 +108,5 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
 
     return <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} {...props} />
 });
+
+GlslPipelineReact.displayName = 'GlslPipeline'

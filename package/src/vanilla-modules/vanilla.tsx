@@ -169,7 +169,6 @@ class GlslPipeline {
         this.frame = 0;
         this.lastTime = 0.0;
         this.time = 0.0;
-        console.log(this.doubleBuffers);
         this.doubleBuffers.forEach((buffer) => {
             buffer.renderTargets.forEach((renderTarget) => {
                 this.renderer.setRenderTarget(renderTarget)
@@ -469,7 +468,7 @@ class GlslPipeline {
     }
 
     renderTarget(material: THREE.Material, output: THREE.WebGLRenderTarget) {
-        this.mesh.material = material as THREE.Material;
+        this.mesh.material = material;
         this.renderer.setRenderTarget(output);
         // this.renderer.clear();
 
@@ -512,15 +511,18 @@ class GlslPipeline {
 
     dispose() {
         this.buffers.forEach((buffer) => {
+            buffer.renderTarget.texture.dispose();
             buffer.renderTarget.dispose();
         });
 
         this.doubleBuffers.forEach((buffer) => {
             buffer.renderTargets.forEach((renderTarget) => {
+                renderTarget.texture.dispose();
                 renderTarget.dispose();
             })
         });
 
+        this.sceneBuffer?.renderTarget?.texture.dispose();
         this.sceneBuffer?.renderTarget?.dispose();
 
         this.material?.dispose();
@@ -556,3 +558,5 @@ function getPassThroughFragmentShader() {
 }
 
 export { GlslPipeline };
+
+export * from './types';

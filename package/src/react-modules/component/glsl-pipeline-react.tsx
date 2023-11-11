@@ -94,19 +94,22 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
 
     React.useEffect(() => {
         if (resize) {
-            window.addEventListener('resize', onResize, false);
+            window.addEventListener('resize', onResize);
             onResize();
         }
 
         return () => {
             if (resize) {
-                window.removeEventListener('resize', onResize, false);
+                window.removeEventListener('resize', onResize);
             }
-            material?.dispose();
+            pipeline.dispose();
         }
-    }, [resize, onResize, material]);
+    }, [resize, onResize]);
 
     return <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} {...props} />
 });
 
-GlslPipelineReact.displayName = 'GlslPipeline'
+// For React Dev Tools Display Name
+GlslPipelineReact.displayName = 'GlslPipelineReact'
+
+export * from '../helper';

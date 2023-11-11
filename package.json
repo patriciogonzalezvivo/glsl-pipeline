@@ -12,8 +12,8 @@
     "postinstall": "preconstruct dev && manypkg check",
     "ci": "preconstruct validate && manypkg check && yarn build",
     "release": "chmod +x ./scripts/release.sh && ./scripts/release.sh",
-    "clean": "rm -rf node_modules package/dist examples/*/node_modules",
-    "update": "./scripts/updateAll.sh"
+    "clean": "rm -rf node_modules package/dist package/r3f/dist examples/**/**/node_modules",
+    "update": "chmod +x ./scripts/updateAll.sh && ./scripts/updateAll.sh"
   },
   "workspaces": {
     "packages": [

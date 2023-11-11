@@ -86,7 +86,6 @@
     "json": "^11.0.0",
     "react": "^18.2.0",
     "rollup": "^4.3.0",
-    "rollup-plugin-multi-input": "^1.4.1",
     "three": "^0.158.0",
     "typescript": "^5.2.2"
   }

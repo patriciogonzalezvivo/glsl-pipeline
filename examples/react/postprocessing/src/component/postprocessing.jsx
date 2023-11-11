@@ -15,7 +15,6 @@ export default function MyEffect() {
     const height = useRef(null)
 
     const shaderRef = useRef();
-    const lightRef = useRef();
 
     const setFov = useCallback((height, distance) => {
         return 2 * Math.atan((height / 2) / distance) * (180 / Math.PI);
@@ -27,9 +26,9 @@ export default function MyEffect() {
         height.current = state.size.height
     });
 
-    useGlslPipeline(({ uniforms }, { gl, scene, camera, size }) => {
-        uniforms.u_resolution.value.x = width.current;
-        uniforms.u_resolution.value.y = height.current;
+    useGlslPipeline(({ uniforms }, { size }) => {
+        uniforms.u_resolution.value.x = size.width;
+        uniforms.u_resolution.value.y = size.height;
     }, shaderRef)
 
     const fragmentShader = useMemo(() => resolveLygia(`#ifdef GL_ES
@@ -119,7 +118,6 @@ void main() {
 
     return (
         <>
-            <pointLight ref={lightRef} position={[0, 10, 8]} lookAt={[0, 0, 0]} />
             <group>
                 <mesh scale={[width.current, height.current, 1]}>
                     <planeGeometry args={[1,1,10, 10]} />

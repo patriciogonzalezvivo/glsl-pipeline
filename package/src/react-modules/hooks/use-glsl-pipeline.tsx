@@ -35,3 +35,4 @@ export function useGlslPipeline(callback: (props: GlslPipelineProperties, state:
     }, [ref.current, addCallback, removeCallback, priority]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
+export * from '../helper';

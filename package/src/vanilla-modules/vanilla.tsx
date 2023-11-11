@@ -198,7 +198,7 @@ class GlslPipeline {
         let b = {
             name: `u_buffer${index}`,
             material: material,
-            renderTarget: null,
+            renderTarget: null as any,
             width: width,
             height: height,
             wrapS: RepeatWrapping,
@@ -468,7 +468,7 @@ class GlslPipeline {
         }
     }
 
-    renderTarget(material: THREE.Material | null, output: THREE.WebGLRenderTarget | null) {
+    renderTarget(material: THREE.Material, output: THREE.WebGLRenderTarget) {
         this.mesh.material = material as THREE.Material;
         this.renderer.setRenderTarget(output);
         // this.renderer.clear();
@@ -508,6 +508,22 @@ class GlslPipeline {
         }
 
         this.frame = 0;
+    }
+
+    dispose() {
+        this.buffers.forEach((buffer) => {
+            buffer.renderTarget.dispose();
+        });
+
+        this.doubleBuffers.forEach((buffer) => {
+            buffer.renderTargets.forEach((renderTarget) => {
+                renderTarget.dispose();
+            })
+        });
+
+        this.sceneBuffer?.renderTarget?.dispose();
+
+        this.material?.dispose();
     }
 }
 

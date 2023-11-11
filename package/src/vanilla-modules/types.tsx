@@ -4,15 +4,15 @@ export type Uniform = { [key: string]: THREE.IUniform<any> }
 
 export interface Buffers extends THREE.RenderTargetOptions {
     name: string,
-    material: THREE.Material | null,
-    renderTarget: THREE.WebGLRenderTarget | null,
+    material: THREE.Material,
+    renderTarget: THREE.WebGLRenderTarget,
     width: number,
     height: number
 }
 
 export interface DoubleBuffers extends THREE.RenderTargetOptions {
     name: string,
-    material: THREE.Material | null,
+    material: THREE.Material,
     renderTargets: Array<THREE.WebGLRenderTarget>,
     width: number,
     height: number

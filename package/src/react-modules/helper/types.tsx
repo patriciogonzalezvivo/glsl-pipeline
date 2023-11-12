@@ -89,3 +89,9 @@ export interface GlslPipelineProperties {
     time: number,
     resolution: THREE.Vec2
 }
+
+export const isOrthographicCamera = (def: any): def is THREE.OrthographicCamera =>
+    def && (def as THREE.OrthographicCamera).isOrthographicCamera
+
+export const isPerspectiveCamera = (def: any): def is THREE.PerspectiveCamera =>
+    def && (def as THREE.PerspectiveCamera).isPerspectiveCamera

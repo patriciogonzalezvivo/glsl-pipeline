@@ -14,10 +14,10 @@ import {
     GlslPipelineContext
 } from "../hooks"
 
-import { GlslPipelineReactProps, addCallback, callbacks, removeCallback } from '../helper/types';
+import { GlslPipelineReactProps, addCallback, callbacks, removeCallback, isPerspectiveCamera } from '../helper/types';
 import { ForwardRefComponent } from 'react-modules/helper/ts-utils';
 
-export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, GlslPipeline> = /* @__PURE__ */ React.forwardRef<GlslPipeline, GlslPipelineReactProps>((
+export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unknown> = /* @__PURE__ */ React.forwardRef<unknown, GlslPipelineReactProps>((
     { 
         type = "scene", 
         uniforms, 
@@ -32,7 +32,7 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
         ref
     ) => {
 
-    const { gl, camera, viewport, size } = useThree();
+    const { gl, camera, size } = useThree();
 
     const callbacks = React.useRef<callbacks[]>([]);
 
@@ -75,7 +75,7 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
 
     const material = React.useMemo(() => branch ? pipeline.branchMaterial(branch) : pipeline.material, [pipeline, branch]);
 
-    React.useImperativeHandle(ref, () => pipeline, [pipeline]);
+    React.useImperativeHandle<unknown, GlslPipeline>(ref, () => pipeline, [pipeline]);
 
     const onResize = React.useCallback(() => {
 
@@ -85,8 +85,9 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
         gl.setSize(size.width, size.height);
         pipeline.setSize(size.width, size.height);
 
-        if (type === 'scene') {
-            viewport.aspect = size.width / size.height;
+        // Only let set camera manually if camera set to `manual` because fiber is making the camera responsive by default.
+        if (type === 'scene' && isPerspectiveCamera(camera)) {
+            camera.aspect = size.width / size.height;
             camera.updateProjectionMatrix();
         }
 
@@ -94,13 +95,13 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, Glsl
 
     React.useEffect(() => {
         if (resize) {
-            window.addEventListener('resize', onResize);
+            window.addEventListener('resize', onResize, false);
             onResize();
         }
 
         return () => {
             if (resize) {
-                window.removeEventListener('resize', onResize);
+                window.removeEventListener('resize', onResize, false);
             }
             pipeline.dispose();
         }

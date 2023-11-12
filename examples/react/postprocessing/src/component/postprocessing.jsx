@@ -27,8 +27,8 @@ export default function MyEffect() {
     });
 
     useGlslPipeline(({ uniforms }, { size }) => {
-        uniforms.u_resolution.value.x = size.width;
-        uniforms.u_resolution.value.y = size.height;
+        uniforms.u_resolution.value.x = width.current;
+        uniforms.u_resolution.value.y = height.current;
     }, shaderRef)
 
     const fragmentShader = useMemo(() => resolveLygia(`#ifdef GL_ES

@@ -58,7 +58,7 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unkn
         glsl.load(fragmentShader, vertexShader);
 
         return glsl;
-    }, [uniforms, fragmentShader, vertexShader]);
+    }, [uniforms, fragmentShader, vertexShader, gl]);
 
     useFrame((state) => {
         if (autoRender) {
@@ -71,7 +71,7 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unkn
         if (pipeline) {
             GlslPipelineContext.setState({ addCallback, removeCallback });
         }
-    }, [pipeline, addCallback, removeCallback]);
+    }, [pipeline, addCallback, removeCallback, GlslPipelineContext]);
 
     const material = React.useMemo(() => branch ? pipeline.branchMaterial(branch) : pipeline.material, [pipeline, branch]);
 
@@ -83,15 +83,16 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unkn
 
         gl.setPixelRatio(window.devicePixelRatio);
         gl.setSize(size.width, size.height);
+        console.log("Set Size", size);
         pipeline.setSize(size.width, size.height);
 
         // Only let set camera manually if camera set to `manual` because fiber is making the camera responsive by default.
-        if (type === 'scene' && isPerspectiveCamera(camera)) {
+        if (type === 'scene' && camera.manual && isPerspectiveCamera(camera)) {
             camera.aspect = size.width / size.height;
             camera.updateProjectionMatrix();
         }
 
-    }, [pipeline, type]);
+    }, [pipeline, type, size, camera, gl]);
 
     React.useEffect(() => {
         if (resize) {
@@ -105,7 +106,7 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unkn
             }
             pipeline.dispose();
         }
-    }, [resize, onResize]);
+    }, [resize, onResize, pipeline]);
 
     return <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} {...props} />
 });

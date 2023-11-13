@@ -1,13 +1,11 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
-import React, { useCallback, useRef, useMemo } from "react"
-import { useThree, extend } from '@react-three/fiber'
+import React, { useCallback, useRef, useMemo, useEffect } from "react"
+import { useThree } from '@react-three/fiber'
 import { useGlslPipeline, GlslPipelineReact } from "glsl-pipeline/r3f"
-import { PointLight } from 'three'
+import { Vector3 } from 'three'
 
 import { resolveLygia } from 'resolve-lygia'
-
-extend({ PointLight })
 
 export default function MyEffect() {
 
@@ -20,13 +18,15 @@ export default function MyEffect() {
         return 2 * Math.atan((height / 2) / distance) * (180 / Math.PI);
     }, [])
 
-    useThree((state) => {
-        state.camera.fov = setFov(state.size.height, state.camera.position.z);
-        width.current = state.size.width
-        height.current = state.size.height
-    });
+    const { size, camera } = useThree();
 
-    useGlslPipeline(({ uniforms }, { size }) => {
+    useMemo(() => {
+        camera.fov = setFov(size.height, camera.position.z);
+        width.current = size.width;
+        height.current = size.height;
+    }, [size, camera, setFov])
+
+    useGlslPipeline(({ uniforms }) => {
         uniforms.u_resolution.value.x = width.current;
         uniforms.u_resolution.value.y = height.current;
     }, shaderRef)
@@ -118,12 +118,10 @@ void main() {
 
     return (
         <>
-            <group>
-                <mesh scale={[width.current, height.current, 1]}>
-                    <planeGeometry args={[1,1,10, 10]} />
-                    <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} vertexShader={vertexShader} />
-                </mesh>
-            </group>
+            <mesh scale={new Vector3(width.current, height.current, 1)}>
+                <planeGeometry args={[1,1,10, 10]} />
+                <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} vertexShader={vertexShader} />
+            </mesh>
         </>
     )
 }

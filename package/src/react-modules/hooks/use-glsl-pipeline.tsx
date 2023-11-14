@@ -6,15 +6,14 @@ import {
 
 import { create } from "zustand"
 
-import { GlslPipelineProperties, ZustandStore } from '../helper';
-import { RootState } from '@react-three/fiber';
+import { GlslPipelineProperties, ZustandStore, useGlslPipelineCallback, GlslPipelineClass } from '../../types';
 
 export const GlslPipelineContext = create<ZustandStore>(() => ({}));
 
-export function useGlslPipeline(callback: (props: GlslPipelineProperties, state: RootState) => void, ref: React.RefObject<GlslPipeline>, priority = 0) {
+export function useGlslPipeline(callback: useGlslPipelineCallback, ref: React.MutableRefObject<GlslPipelineClass | undefined>, priority = 0) {
     const { addCallback, removeCallback } = GlslPipelineContext();
 
-    const filtered = React.useCallback<(pipe: GlslPipeline) => GlslPipelineProperties>((pipe) => {
+    const filtered = React.useCallback<(pipe: GlslPipelineClass) => GlslPipelineProperties>((pipe) => {
         return (Object.keys(pipe) as Array<keyof typeof GlslPipeline>).reduce((res, key) => {
             if (typeof pipe[key] !== 'function') {
                 res[key] = pipe[key];
@@ -34,5 +33,3 @@ export function useGlslPipeline(callback: (props: GlslPipelineProperties, state:
         }
     }, [ref.current, addCallback, removeCallback, priority]); // eslint-disable-line react-hooks/exhaustive-deps
 }
-
-export * from '../helper';

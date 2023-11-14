@@ -6,7 +6,9 @@ GlslPipeline is a class that allows quick prototyping of pipelines directly from
 
 GlslPipeline also handles some basic uniforms such as `u_resolution`, `u_mouse`, `u_time`, `u_delta` and `u_frame`.
 
-All these specs are based 100% on the [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer/wiki) workflow and are designed so you can start your prototypes there and then port them to WebGL using [ThreeJS](https://github.com/mrdoob/three.js) in a few seconds by just loading your shader code in GlslPipeline.
+All these specs are based 100% on the [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer/wiki) workflow and are designed so you can start your prototypes there and then port them to WebGL using [ThreeJS](https://github.com/mrdoob/three.js) in a few seconds by just loading your shader code in GlslPipeline. 
+
+> **_It supports both Vanilla and React!_**
 
 ## Install, load and run your shader
 
@@ -16,10 +18,14 @@ Through your terminal **install** the package:
 npm install glsl-pipeline --save
 ```
 
+### Render Main
+
 If you are not using geometry, you just create a new instance of GlslPipeline, load your shader, and start rendering it:
 
+<details>
+    <summary>Show Vanilla example</summary>
+
 ```js
-import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { GlslPipeline } from 'glsl-pipeline';
 
 const renderer = new WebGLRenderer();
@@ -47,11 +53,58 @@ resize();
 draw();
 ```
 
+</details>
+
+<details>
+    <summary>Show React example</summary>
+
+```jsx
+import { GlslPipelineReact, useGlslPipeline } from 'glsl-pipeline/r3f'
+
+function MainShader(props){
+    const shaderRef = React.useRef();
+
+    const fragmentShader = React.useMemo(() => `varying vec4 v_texcoord;
+    uniform float u_time;
+
+    void main(void){
+        gl_FragColor = vec4(vec3(mod(u_time, 3.)), 1.);
+    }`);
+
+    useGlslPipeline(({ uniforms }, { size }) => {
+        // This hook runs on render (60 fps)
+        console.log("Get current uniforms:", uniforms);
+        console.log("useThree() states:", size);
+    }, shaderRef);
+
+    return (
+        <GlslPipelineReact ref={shaderRef} type={"main"} fragmentShader={fragmentShader} {...props} />
+    )
+}
+
+function App() {
+
+  return (
+    <Canvas>
+        <MainShader />
+    </Canvas>
+  )
+}
+
+export default App
+```
+
+</details>
+
+### Render Geometry
+
 If you want to use geometry you will need to create a scene and a camera, provide a vertex and fragment shader and then render the scene using `renderScene` method:
 
+> You don't have to set `renderScene` in react. It is automatically render to scene unless you change prop for `GlslPipelineReact` on `autoRender={false}`
+<details>
+    <summary>Show Vanilla example</summary>
 
 ```js
-import { WebGLRenderer, PerspectiveCamera, Vector3 } from 'three';
 import { GlslPipeline } from 'glsl-pipeline';
 
 const renderer = new WebGLRenderer();
@@ -83,6 +136,204 @@ resize();
 
 draw();
 ```
+
+</details>
+
+<details>
+    <summary>Show React example</summary>
+
+```jsx
+import { GlslPipelineReact, useGlslPipeline } from 'glsl-pipeline/r3f'
+
+function MainShader(props){
+    const shaderRef = React.useRef();
+
+    const fragmentShader = React.useMemo(() => `varying vec4 v_texcoord;
+    uniform float u_time;
+
+    void main(void){
+        gl_FragColor = vec4(vec3(mod(u_time, 3.)), 1.);
+    }`);
+
+    useGlslPipeline(({ uniforms }, { size }) => {
+        // This hook runs on render (60 fps)
+        console.log("Get current uniforms:", uniforms);
+        console.log("useThree() states:", size);
+    }, shaderRef);
+
+    return (
+        <mesh>
+            <planeGeometry args={[10, 10, 10, 10]} />
+            <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} {...props} />
+        </mesh>
+    )
+}
+
+function App() {
+
+  return (
+    <Canvas>
+        <MainShader />
+    </Canvas>
+  )
+}
+```
+
+</details>
+
+### React Advance Render
+
+For React, you can run render manually by setting the `autoRender={false}`. Typescript also supported
+
+<details>
+    <summary>Show React Javascript example</summary>
+
+```jsx
+import { GlslPipelineReact, useGlslPipeline } from 'glsl-pipeline/r3f'
+
+function MainShader(props){
+    const shaderRef = React.useRef();
+    const secondShaderRef = React.useRef();
+
+    const fragmentShader = React.useMemo<string>(() => `varying vec4 v_texcoord;
+    uniform float u_time;
+
+    void main(void){
+        gl_FragColor = vec4(vec3(mod(u_time, 3.)), 1.);
+    }`);
+
+    useGlslPipeline((props, state) => {
+        // This hook runs on render (60 fps)
+        // This will run on second priority
+        secondShaderRef.current.renderScene(props.scene, props.camera);
+    }, secondShaderRef, 2);
+
+    useGlslPipeline((props, state) => {
+        // This hook runs on render (60 fps)
+        // This will run first!
+        shaderRef.current.renderMain();
+    }, shaderRef, 1);
+
+    return (
+        <>
+            <group>
+                <mesh>
+                    <planeGeometry args={[10, 10, 10, 10]} />
+                    <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} autoRender={false} {...props} />
+                </mesh>
+            </group>
+            <group>
+                <mesh>
+                    <planeGeometry />
+                    <GlslPipelineReact ref={secondShaderRef} fragmentShader={fragmentShader} type={"scene"} autoRender={false} {...props} />
+                </mesh>
+            </group>
+        </>
+    )
+}
+
+function App() {
+
+  return (
+    <Canvas>
+        <MainShader />
+    </Canvas>
+  )
+}
+```
+</details>
+
+<details>
+    <summary>Show React Typescript example</summary>
+
+```jsx
+import { GlslPipelineReact, useGlslPipeline } from 'glsl-pipeline/r3f'
+import { GlslPipelineClass } from 'glsl-pipeline/types'
+
+function MainShader(props){
+    const shaderRef = React.useRef<GlslPipelineClass>();
+    const secondShaderRef = React.useRef<GlslPipelineClass>();
+
+    const fragmentShader = React.useMemo<string>(() => `varying vec4 v_texcoord;
+    uniform float u_time;
+
+    void main(void){
+        gl_FragColor = vec4(vec3(mod(u_time, 3.)), 1.);
+    }`);
+
+    useGlslPipeline((props, state) => {
+        // This hook runs on render (60 fps)
+        // This will run on second priority
+        secondShaderRef.current.renderScene(props.scene, props.camera);
+    }, secondShaderRef, 2);
+
+    useGlslPipeline((props, state) => {
+        // This hook runs on render (60 fps)
+        // This will run first!
+        shaderRef.current.renderMain();
+    }, shaderRef, 1);
+
+    return (
+        <>
+            <group>
+                <mesh>
+                    <planeGeometry args={[10, 10, 10, 10]} />
+                    <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} autoRender={false} {...props} />
+                </mesh>
+            </group>
+            <group>
+                <mesh>
+                    <planeGeometry />
+                    <GlslPipelineReact ref={secondShaderRef} fragmentShader={fragmentShader} type={"scene"} autoRender={false} {...props} />
+                </mesh>
+            </group>
+        </>
+    )
+}
+
+function App() {
+
+  return (
+    <Canvas>
+        <MainShader />
+    </Canvas>
+  )
+}
+```
+</details>
+
+### `GlslPipelineReact` Properties
+| Properties | Type | Available Values | Default Value | Description |
+| ---------- | ---- | ---------------- | ------------- |----------- |
+| type | string | 'main' \| 'scene' | 'scene' | To determine how GlslPipeline will render. |
+| uniforms | object | none | null | You can insert your own uniforms here. |
+| fragmentShader | string | none | null | You must insert your own fragmentShader string here. |
+| vertexShader | string | none | null | This is optional either you can insert your own vertexShader or just leave it empty. |
+| branch | string \| Array\<string\> | none | null | You can set your own define(s) named here. It will uppercase the string of your defined name. |
+| resize | boolean | true \| false | true | Automatically resize GlslPipelineReact or not. |
+| autoRender | boolean | true \| false | true | Automatically render GlslPipelineReact or not. |
+| renderPriority | number | any number | 0 | `useFrame` render priority value as refer to this [documentation](https://docs.pmnd.rs/react-three-fiber/api/hooks#taking-over-the-render-loop)
+
+### `useGlslPipeline` Hook
+As refer to the above example, the `useGlslPipeline` hook will send you all the `GlslPipeline` properties with `useThree` states so that you can manipulate the uniforms directly from there.
+> ⚠️ WARNING: This hook executed 60fps! Watch out when set any value in the hook callback. Preferable use `useRef` value due to that invisible to React render.
+
+<details>
+    <summary>Show Hook example</summary>
+    
+```jsx
+    useGlslPipeline((props, state) => {
+        // This hook runs on render (60 fps)
+        shaderRef.current.renderMain();
+    }, shaderRef, 1);
+```
+</details>
+
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| callback | (props: GlslPipelineProperties, state: ReactThreeFiber.RootState) => void | You can set any value here or debug the value in here during 60fps render. |
+| ref |  React.MutableRefObject\<GlslPipelineClass \| undefined\> | To use which ref is refered to. |
+| priority | number | Priority of callback (lower priority callbacks are called first) |
 
 ## PIPELINE STAGES
 

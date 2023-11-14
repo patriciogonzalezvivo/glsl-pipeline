@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
-import React, { useCallback, useRef, useMemo, useEffect } from "react"
+import React, { useCallback, useRef, useMemo } from "react"
 import { useThree } from '@react-three/fiber'
-import { useGlslPipeline, GlslPipelineReact } from "glsl-pipeline/r3f"
+import { useGlslPipeline, GlslPipelineReact  } from "glsl-pipeline/r3f"
 import { Vector3 } from 'three'
 
 import { resolveLygia } from 'resolve-lygia'

@@ -19,9 +19,9 @@ import {
     DepthTexture,
 } from 'three';
 
-import { Uniform, Buffers, DoubleBuffers, SceneBuffers, BufferSize, GlslPipelineRenderTargets } from "./types"
+import { Uniform, Buffers, DoubleBuffers, SceneBuffers, BufferSize, GlslPipelineRenderTargets, GlslPipelineClass } from "../types"
 
-class GlslPipeline {
+class GlslPipeline implements GlslPipelineClass {
     public renderer: THREE.WebGLRenderer
     public defines: { [key: string]: any }
     public uniforms: Uniform
@@ -108,7 +108,7 @@ class GlslPipeline {
         }, false);
     }
 
-    getBufferSize(name: string): BufferSize {
+    getBufferSize(name: string) {
         if (this.frag_src == null)
             return { width: 1.0, height: 1.0 };
 
@@ -178,7 +178,7 @@ class GlslPipeline {
     }
 
     branchMaterial(name: string | Array<string>) {
-        if(typeof name !== 'string') {
+        if(Array.isArray(name)) {
             return createShaderMaterial(this.uniforms, this.defines, `${name.map((str) => `#define ${str.toUpperCase()}\n`).join(',').replace(',', '')}${this.frag_src}`, `${name.map((str) => `#define ${str.toUpperCase()}\n`).join(',').replace(',', '')}${this.vert_src}`,);
         }
         else {
@@ -273,7 +273,7 @@ class GlslPipeline {
         this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow?.mapSize.width.toString();
     }
 
-    createRenderTarget(b: GlslPipelineRenderTargets): WebGLRenderTarget {
+    createRenderTarget(b: GlslPipelineRenderTargets) {
         b.wrapS = b.wrapS || ClampToEdgeWrapping;
         b.wrapT = b.wrapT || ClampToEdgeWrapping;
 
@@ -394,14 +394,14 @@ class GlslPipeline {
         }
     }
 
-    getBufferTexture(index: number): THREE.Texture | undefined {
+    getBufferTexture(index: number) {
         if (index >= this.buffers.length)
             return;
 
         return this.buffers[index].renderTarget?.texture;
     }
 
-    getDoubleBufferTexture(index: number): THREE.Texture | undefined {
+    getDoubleBufferTexture(index: number) {
         if (index >= this.doubleBuffers.length)
             return;
 
@@ -558,5 +558,3 @@ function getPassThroughFragmentShader() {
 }
 
 export { GlslPipeline };
-
-export * from './types';

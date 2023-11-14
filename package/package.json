@@ -5,12 +5,13 @@
   "description": "Prototype complex pipelines directly from a single shader by branching it into stages using React Three Fiber/React.",
   "main": "dist/glsl-pipeline.cjs.js",
   "module": "dist/glsl-pipeline.esm.js",
-  "types": "dist/glsl-pipeline.cjs.d.ts",
+  "types": "types/dist/glsl-pipeline.cjs.d.ts",
   "sideEffects": false,
   "type": "module",
   "files": [
     "dist/**",
     "r3f/**",
+    "types/**",
     "README.md",
     "LICENSE.md",
     "package.json"
@@ -18,7 +19,8 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "r3f.ts"
+      "r3f.ts",
+      "types.ts"
     ]
   },
   "repository": {

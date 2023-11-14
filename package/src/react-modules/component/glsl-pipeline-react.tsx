@@ -14,10 +14,9 @@ import {
     GlslPipelineContext
 } from "../hooks"
 
-import { GlslPipelineReactProps, addCallback, callbacks, removeCallback, isPerspectiveCamera } from '../helper/types';
-import { ForwardRefComponent } from 'react-modules/helper/ts-utils';
+import { GlslPipelineReactProps, addCallback, callbacks, removeCallback, isPerspectiveCamera, GlslPipelineClass } from '../../types';
 
-export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslPipelineReactProps>((
+export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineClass, GlslPipelineReactProps>((
     { 
         type = "scene", 
         uniforms, 
@@ -29,7 +28,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslP
         renderPriority = 0, 
         ...props 
     } : GlslPipelineReactProps, 
-        ref: React.Ref<unknown>
+        ref
     ) => {
 
     const { gl, camera, size } = useThree();
@@ -51,7 +50,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslP
         }
     }, []);
 
-    const pipeline = React.useMemo<GlslPipeline>(() => {
+    const pipeline = React.useMemo<GlslPipelineClass>(() => {
 
         const glsl = new GlslPipeline(gl, uniforms);
 
@@ -69,6 +68,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslP
                 
                 case "main":
                     pipeline.renderMain();
+                    break;
             }
         }
         onRender(state);
@@ -82,7 +82,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslP
 
     const material = React.useMemo(() => branch ? pipeline.branchMaterial(branch) : pipeline.material, [pipeline, branch]);
 
-    React.useImperativeHandle<unknown, GlslPipeline>(ref, () => pipeline, [pipeline]);
+    React.useImperativeHandle(ref, () => pipeline, [pipeline]);
 
     const onResize = React.useCallback(() => {
 
@@ -92,15 +92,15 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslP
         gl.setSize(size.width, size.height);
         pipeline.setSize(size.width, size.height);
 
-        // Only let set camera manually if camera set to `manual` because fiber is making the camera responsive by default.
-        if (type === 'scene' && camera.manual && isPerspectiveCamera(camera)) {
+        // Only set camera manually if camera set to `manual` because fiber is making the camera responsive by default.
+        if (type === 'scene' && isPerspectiveCamera(camera)) {
             camera.aspect = size.width / size.height;
             camera.updateProjectionMatrix();
         }
 
     }, [pipeline, type, size, camera, gl]);
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
         if (resize) {
             window.addEventListener('resize', onResize, false);
             onResize();
@@ -119,5 +119,3 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslP
 
 // For React Dev Tools Display Name
 GlslPipelineReact.displayName = 'GlslPipelineReact'
-
-export * from '../helper';

@@ -15,7 +15,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "resolve-lygia": "^1.0.4",
-    "three": "^0.158.0"
+    "three": "^0.158.0",
+    "three-stdlib": "^2.28.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

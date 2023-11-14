@@ -105,3 +105,6 @@ dist
 
 # Webstorm project config folder
 .idea
+
+# Mac Invisible Folder
+.DS_Store

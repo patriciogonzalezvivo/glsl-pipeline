@@ -17,7 +17,7 @@ import {
 import { GlslPipelineReactProps, addCallback, callbacks, removeCallback, isPerspectiveCamera } from '../helper/types';
 import { ForwardRefComponent } from 'react-modules/helper/ts-utils';
 
-export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unknown> = /* @__PURE__ */ React.forwardRef<unknown, GlslPipelineReactProps>((
+export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<unknown, GlslPipelineReactProps>((
     { 
         type = "scene", 
         uniforms, 
@@ -28,8 +28,8 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unkn
         autoRender = true, 
         renderPriority = 0, 
         ...props 
-    }, 
-        ref
+    } : GlslPipelineReactProps, 
+        ref: React.Ref<unknown>
     ) => {
 
     const { gl, camera, size } = useThree();
@@ -62,7 +62,14 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unkn
 
     useFrame((state) => {
         if (autoRender) {
-            pipeline.renderScene(state.scene, state.camera);
+            switch (type) {
+                case "scene":
+                    pipeline.renderScene(state.scene, state.camera);
+                    break;
+                
+                case "main":
+                    pipeline.renderMain();
+            }
         }
         onRender(state);
     }, renderPriority);
@@ -83,7 +90,6 @@ export const GlslPipelineReact: ForwardRefComponent<GlslPipelineReactProps, unkn
 
         gl.setPixelRatio(window.devicePixelRatio);
         gl.setSize(size.width, size.height);
-        console.log("Set Size", size);
         pipeline.setSize(size.width, size.height);
 
         // Only let set camera manually if camera set to `manual` because fiber is making the camera responsive by default.

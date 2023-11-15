@@ -45,7 +45,7 @@
     "dev": "preconstruct watch",
     "build": "preconstruct build"
   },
-  "author": "Amin Shazrin",
+  "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/patriciogonzalezvivo/glsl-pipeline/issues"

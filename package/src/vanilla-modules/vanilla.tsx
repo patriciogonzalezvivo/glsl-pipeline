@@ -541,10 +541,33 @@ function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }
 }
 
 function getPassThroughVertexShader() {
-    return  /* glsl */`varying vec2 v_texcoord;
-    void main() {
+    return  /* glsl */`uniform mat4    u_lightMatrix;
+    varying vec4    v_lightCoord;
+
+    varying vec4    v_position;
+    varying vec4    v_tangent;
+    varying vec4    v_color;
+    varying vec3    v_normal;
+    varying vec2    v_texcoord;
+    
+    void main(void) {
+        v_position = vec4(position, 1.0);
+        v_normal = normal;
         v_texcoord = uv;
-        gl_Position = vec4(position, 1.0);
+        
+        #ifdef USE_TANGENT
+        v_tangent = tangent;
+        #endif
+
+        #ifdef USE_COLOR
+        v_color = color;
+        #else
+        v_color = vec4(1.0);
+        #endif
+
+        v_position = modelMatrix * v_position;
+        v_lightCoord = u_lightMatrix * v_position;
+        gl_Position = projectionMatrix * viewMatrix * v_position;
     }`;
 }
 

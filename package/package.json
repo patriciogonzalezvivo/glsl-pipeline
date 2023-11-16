@@ -52,9 +52,9 @@
   },
   "homepage": "https://github.com/patriciogonzalezvivo/glsl-pipeline#readme",
   "peerDependencies": {
-    "@react-three/fiber": ">=8.0",
-    "react": ">=18.0",
-    "three": ">=0.137"
+    "@react-three/fiber": ">=^8.15.11",
+    "react": ">=18.2.0",
+    "three": ">=0.158"
   },
   "peerDependenciesMeta": {
     "@react-three/fiber": {
@@ -78,7 +78,7 @@
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.3",
     "@babel/runtime": "^7.23.2",
-    "@react-three/fiber": "^8.15.10",
+    "@react-three/fiber": "^8.15.11",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",

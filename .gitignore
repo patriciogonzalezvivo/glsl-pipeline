@@ -108,3 +108,7 @@ dist
 
 # Mac Invisible Folder
 .DS_Store
+
+# Locks
+package-lock.json
+yarn.lock

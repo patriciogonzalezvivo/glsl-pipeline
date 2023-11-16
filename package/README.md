@@ -251,10 +251,10 @@ import { GlslPipelineReact, useGlslPipeline } from 'glsl-pipeline/r3f'
 import { GlslPipelineClass } from 'glsl-pipeline/types'
 
 function MainShader(props){
-    const shaderRef = React.useRef<GlslPipelineClass>();
-    const secondShaderRef = React.useRef<GlslPipelineClass>();
+    const shaderRef = React.useRef<GlslPipelineClass | null>(null);
+    const secondShaderRef = React.createRef<GlslPipelineClass>();
 
-    const fragmentShader = React.useMemo<string>(() => `varying vec4 v_texcoord;
+    const fragmentShader = React.useMemo(() => `varying vec4 v_texcoord;
     uniform float u_time;
 
     void main(void){
@@ -322,6 +322,7 @@ As refer to the above example, the `useGlslPipeline` hook will send you all the 
     <summary>Show Hook example</summary>
     
 ```jsx
+    import { useGlslPipeline } from 'glsl-pipeline/r3f'
     useGlslPipeline((props, state) => {
         // This hook runs on render (60 fps)
         shaderRef.current.renderMain();

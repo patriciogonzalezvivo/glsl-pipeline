@@ -19,7 +19,7 @@ import {
     DepthTexture,
 } from 'three';
 
-import { Uniform, Buffers, DoubleBuffers, SceneBuffers, BufferSize, GlslPipelineRenderTargets, GlslPipelineClass } from "../types"
+import { Uniform, Buffers, DoubleBuffers, SceneBuffers, BufferSize, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
 
 class GlslPipeline implements GlslPipelineClass {
     public renderer: THREE.WebGLRenderer
@@ -27,7 +27,7 @@ class GlslPipeline implements GlslPipelineClass {
     public uniforms: Uniform
     public frag_src: string | null
     public vert_src: string | null
-    public light: THREE.Light | null
+    public light: Lights | null
     public buffers: Array<Buffers>
     public doubleBuffers: Array<DoubleBuffers>
     public background: THREE.Material | null
@@ -262,7 +262,7 @@ class GlslPipeline implements GlslPipelineClass {
         return this.sceneBuffer;
     }
 
-    setLight(light: THREE.Light | THREE.AmbientLight | THREE.PointLight | THREE.SpotLight | THREE.DirectionalLight | THREE.RectAreaLight | THREE.HemisphereLight) {
+    setLight(light: Lights) {
         this.light = light;
         this.uniforms.u_lightMatrix = { value: this.light.shadow?.matrix };
         this.uniforms.u_light = { value: this.light.position };

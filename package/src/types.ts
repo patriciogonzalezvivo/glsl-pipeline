@@ -45,7 +45,7 @@ export interface GlslPipelineProperties {
     uniforms: Uniform,
     frag_src: string | null,
     vert_src: string | null,
-    light: THREE.Light | null,
+    light: Lights | null,
     buffers: Array<Buffers>,
     doubleBuffers: Array<DoubleBuffers>,
     background: THREE.Material | null,
@@ -71,7 +71,7 @@ export interface GlslPipelineClass extends GlslPipelineProperties {
     addBuffer(width: number, height: number): Buffers,
     addDoubleBuffer(width: number, height: number): DoubleBuffers,
     addPostprocessing(): SceneBuffers,
-    setLight(light: THREE.Light | THREE.AmbientLight | THREE.PointLight | THREE.SpotLight | THREE.DirectionalLight | THREE.RectAreaLight | THREE.HemisphereLight): void,
+    setLight(light: Lights): void,
     createRenderTarget(b: GlslPipelineRenderTargets): THREE.WebGLRenderTarget,
     updateUniforms(camera?: THREE.PerspectiveCamera | THREE.OrthographicCamera): void,
     updateBuffers(): void,
@@ -87,17 +87,19 @@ export interface GlslPipelineClass extends GlslPipelineProperties {
 }
 
 export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass>, 'ref'> {
-    type: "scene" | "main" | undefined,
-    uniforms: Uniform,
+    type?: "scene" | "main" | undefined,
+    uniforms?: Uniform,
     fragmentShader: string,
     vertexShader?: string | null,
     branch?: string | Array<string>,
-    resize: boolean,
-    autoRender: boolean,
-    renderPriority: number,
+    resize?: boolean,
+    autoRender?: boolean,
+    renderPriority?: number,
 }
 
-export type addCallback = (callback: any, priority: number, pipeline: GlslPipelineProperties) => void;
+export type callbackRender = (props: GlslPipelineClass, state: RootState) => void
+
+export type addCallback = (callback: useGlslPipelineCallback, priority: number) => void;
 
 export type removeCallback = (callback: any) => void
 
@@ -107,9 +109,8 @@ export interface ZustandStore {
 }
 
 export interface callbacks {
-    callback: any,
-    priority: number,
-    pipeline: GlslPipelineProperties
+    callback: useGlslPipelineCallback,
+    priority: number
 }
 
 export const isOrthographicCamera = (def: any): def is THREE.OrthographicCamera =>
@@ -119,5 +120,7 @@ export const isPerspectiveCamera = (def: any): def is THREE.PerspectiveCamera =>
     def && (def as THREE.PerspectiveCamera).isPerspectiveCamera
 
 export type useGlslPipelineCallback = (props: GlslPipelineProperties, state: RootState) => void;
+
+export type Lights = THREE.Light<THREE.DirectionalLightShadow | THREE.SpotLightShadow | THREE.PointLightShadow>;
 
 export * from './types-helper';

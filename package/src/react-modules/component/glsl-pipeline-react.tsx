@@ -14,7 +14,7 @@ import {
     GlslPipelineContext
 } from "../hooks"
 
-import { GlslPipelineReactProps, addCallback, callbacks, removeCallback, isPerspectiveCamera, GlslPipelineClass } from '../../types';
+import { GlslPipelineReactProps, addCallback, callbacks, removeCallback, isPerspectiveCamera, GlslPipelineClass, GlslPipelineProperties, callbackRender } from '../../types';
 
 export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineClass, GlslPipelineReactProps>((
     { 
@@ -35,8 +35,8 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineCl
 
     const callbacks = React.useRef<callbacks[]>([]);
 
-    const addCallback = React.useCallback<addCallback>((callback, priority, pipeline) => {
-        callbacks.current.push({ callback, priority, pipeline });
+    const addCallback = React.useCallback<addCallback>((callback, priority) => {
+        callbacks.current.push({ callback, priority });
         callbacks.current.sort((a, b) => a.priority - b.priority);
     }, []);
 
@@ -44,9 +44,19 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineCl
         callbacks.current = callbacks.current.filter((cb) => cb.callback !== callback)
     }, []);
 
-    const onRender = React.useCallback<((RootState) => void)>((s) => {
+    const filtered = React.useCallback<(pipe: GlslPipelineClass) => GlslPipelineProperties>((pipe) => {
+        return (Object.keys(pipe) as Array<keyof typeof GlslPipeline>).reduce((res, key) => {
+            if (typeof pipe[key] !== 'function') {
+                res[key] = pipe[key];
+            }
+
+            return res;
+        }, {} as any);
+    }, []);
+
+    const onRender = React.useCallback<callbackRender>((p, s) => {
         for (let i = 0; i < callbacks.current.length; i++) {
-            callbacks.current[i].callback(callbacks.current[i].pipeline, s);
+            callbacks.current[i].callback(filtered(p), s);
         }
     }, []);
 
@@ -71,7 +81,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineCl
                     break;
             }
         }
-        onRender(state);
+        onRender(pipeline, state);
     }, renderPriority);
 
     React.useEffect(() => {

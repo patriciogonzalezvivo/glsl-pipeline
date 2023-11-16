@@ -12,6 +12,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "@react-three/fiber": "^8.15.11",
     "glsl-pipeline": "^1.0.6",
     "resolve-lygia": "^1.0.4",
     "three": "^0.158.0"

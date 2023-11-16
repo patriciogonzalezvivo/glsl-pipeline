@@ -152,7 +152,7 @@ uniform sampler2D   u_doubleBuffer0;
 
     return (
         <>
-            <directionalLight color={new Color("pink")} ref={lightRef} position={new Vector3(0, 10, 8)} lookAt={new Vector3(0, 0, 0)} castShadow />
+            <directionalLight color={new Color("pink")} ref={lightRef} position={new Vector3(0, 10, 8)} castShadow />
             <mesh castShadow receiveShadow>
                 <sphereGeometry args={[1, 64, 32]}/>
                 <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'SPHERE'} />

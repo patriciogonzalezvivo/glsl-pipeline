@@ -151,7 +151,6 @@ class GlslPipeline implements GlslPipelineClass {
             this.renderer.autoClearColor = false;
             for (let i = 0; i < found_doubleBuffers.length; i++) {
                 let s = this.getBufferSize(`u_doubleBuffer${i}`);
-                // console.log(s);
                 this.addDoubleBuffer(s.width, s.height);
             }
         }
@@ -179,7 +178,8 @@ class GlslPipeline implements GlslPipelineClass {
 
     branchMaterial(name: string | Array<string>) {
         if(Array.isArray(name)) {
-            return createShaderMaterial(this.uniforms, this.defines, `${name.map((str) => `#define ${str.toUpperCase()}\n`).join(',').replace(',', '')}${this.frag_src}`, `${name.map((str) => `#define ${str.toUpperCase()}\n`).join(',').replace(',', '')}${this.vert_src}`,);
+            let names = name.map((str) => `#define ${str.toUpperCase()}\n`).filter(Boolean).join('');
+            return createShaderMaterial(this.uniforms, this.defines, `${names}${this.frag_src}`, `${names}${this.vert_src}`,);
         }
         else {
             return createShaderMaterial(this.uniforms, this.defines, `#define ${name.toUpperCase()}\n${this.frag_src}`, `#define ${name.toUpperCase()}\n${this.vert_src}`,);
@@ -461,7 +461,7 @@ class GlslPipeline implements GlslPipelineClass {
             this.uniforms.u_scene.value = this.sceneBuffer.renderTarget?.texture;
             this.uniforms.u_sceneDepth.value = this.sceneBuffer.renderTarget?.depthTexture;
 
-            this.mesh.material = this.postprocessing as THREE.Material;
+            this.mesh.material = this.postprocessing as THREE.ShaderMaterial;
             this.renderer.render(this.billboard_scene, this.billboard_camera);
             this.mesh.material = this.passThruShader;
         }
@@ -529,7 +529,7 @@ class GlslPipeline implements GlslPipelineClass {
     }
 }
 
-function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, fragmentShader: string, vertexShader = null as null | string) {
+function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, fragmentShader: string, vertexShader?:  string | null) {
     let material = /* @__PURE__ */ new ShaderMaterial({
         uniforms: uniforms === undefined ? {} : uniforms,
         vertexShader: vertexShader || getPassThroughVertexShader(),
@@ -541,33 +541,10 @@ function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }
 }
 
 function getPassThroughVertexShader() {
-    return  /* glsl */`uniform mat4    u_lightMatrix;
-    varying vec4    v_lightCoord;
-
-    varying vec4    v_position;
-    varying vec4    v_tangent;
-    varying vec4    v_color;
-    varying vec3    v_normal;
-    varying vec2    v_texcoord;
-    
-    void main(void) {
-        v_position = vec4(position, 1.0);
-        v_normal = normal;
+    return  /* glsl */`varying vec2 v_texcoord;
+    void main() {
         v_texcoord = uv;
-        
-        #ifdef USE_TANGENT
-        v_tangent = tangent;
-        #endif
-
-        #ifdef USE_COLOR
-        v_color = color;
-        #else
-        v_color = vec4(1.0);
-        #endif
-
-        v_position = modelMatrix * v_position;
-        v_lightCoord = u_lightMatrix * v_position;
-        gl_Position = projectionMatrix * viewMatrix * v_position;
+        gl_Position = vec4(position, 1.0);
     }`;
 }
 

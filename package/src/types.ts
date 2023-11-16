@@ -73,7 +73,7 @@ export interface GlslPipelineClass extends GlslPipelineProperties {
     addPostprocessing(): SceneBuffers,
     setLight(light: THREE.Light | THREE.AmbientLight | THREE.PointLight | THREE.SpotLight | THREE.DirectionalLight | THREE.RectAreaLight | THREE.HemisphereLight): void,
     createRenderTarget(b: GlslPipelineRenderTargets): THREE.WebGLRenderTarget,
-    updateUniforms(camera: THREE.PerspectiveCamera | THREE.OrthographicCamera | null): void,
+    updateUniforms(camera?: THREE.PerspectiveCamera | THREE.OrthographicCamera): void,
     updateBuffers(): void,
     getBufferTexture(index: number): THREE.Texture | undefined,
     getDoubleBufferTexture(index: number): THREE.Texture | undefined,

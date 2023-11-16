@@ -57,7 +57,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineCl
         glsl.load(fragmentShader, vertexShader);
 
         return glsl;
-    }, [uniforms, fragmentShader, vertexShader, gl]);
+    }, [uniforms, fragmentShader, vertexShader, gl, camera]);
 
     useFrame((state) => {
         if (autoRender) {

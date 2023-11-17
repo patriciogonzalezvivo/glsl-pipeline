@@ -25,7 +25,7 @@ import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTarget
 class GlslPipeline implements GlslPipelineClass {
     public renderer: THREE.WebGLRenderer
     public defines: { [key: string]: any }
-    public options: THREE.MaterialParameters
+    public options: THREE.ShaderMaterialParameters
     public uniforms: Uniform
     public frag_src: string | null
     public vert_src: string | null
@@ -47,7 +47,7 @@ class GlslPipeline implements GlslPipelineClass {
     public time: number
     public resolution: THREE.Vec2
 
-    constructor(renderer: THREE.WebGLRenderer, uniforms = {} as Uniform, options = {} as THREE.MaterialParameters) {
+    constructor(renderer: THREE.WebGLRenderer, uniforms = {} as Uniform, options = {} as THREE.ShaderMaterialParameters) {
         if (!renderer.capabilities.floatFragmentTextures)
             throw new Error("No OES_texture_float support for float textures.");
 
@@ -532,7 +532,7 @@ class GlslPipeline implements GlslPipelineClass {
     }
 }
 
-function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, options: THREE.MaterialParameters, fragmentShader: string, vertexShader?:  string | null) {
+function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, options: THREE.ShaderMaterialParameters, fragmentShader: string, vertexShader?:  string | null) {
     let material = /* @__PURE__ */ new ShaderMaterial({
         uniforms: uniforms === undefined ? {} : uniforms,
         vertexShader: vertexShader || getPassThroughVertexShader(),

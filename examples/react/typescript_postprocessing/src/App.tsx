@@ -7,14 +7,18 @@ function App() {
 
   return (
     <>
-      <div className='main'>
-        <Canvas gl={{
-          alpha: true
-        }}>
-          <CameraControls />
-          <MyEffect />
-        </Canvas>
-      </div>
+      <Canvas gl={{
+        alpha: true
+      }} style={{
+          width: '100%',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          top: 0
+      }}>
+        <CameraControls />
+        <MyEffect />
+      </Canvas>
     </>
   )
 }

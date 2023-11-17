@@ -10,7 +10,7 @@ import { GlslPipelineProperties, ZustandStore, useGlslPipelineCallback, GlslPipe
 
 export const GlslPipelineContext = create<ZustandStore>(() => ({}));
 
-export function useGlslPipeline(callback: useGlslPipelineCallback, ref: React.MutableRefObject<GlslPipelineClass | null | undefined>, priority = 0) {
+export function useGlslPipeline(callback: useGlslPipelineCallback, ref: React.MutableRefObject<GlslPipelineClass | null>, priority = 0) {
     const { addCallback, removeCallback } = GlslPipelineContext();
 
     React.useEffect(() => {

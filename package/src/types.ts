@@ -5,7 +5,7 @@ import { Assign } from 'utility-types';
 
 export type Uniform = { [key: string]: THREE.IUniform<any> }
 
-export type MaterialConstructor = new (options: Assign<THREE.MaterialParameters, GlslPipelineReactProps>) => THREE.Material
+export type MaterialConstructor = new (options: Assign<THREE.ShaderMaterialParameters, GlslPipelineReactProps>) => THREE.Material
 type MaterialParams<T extends MaterialConstructor> = ConstructorParameters<T>[0]
 export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass>, 'ref'> {
     type?: "scene" | "main" | undefined,
@@ -71,7 +71,7 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
 export interface GlslPipelineProperties {
     renderer: THREE.WebGLRenderer,
     defines: { [key: string]: any },
-    options: THREE.MaterialParameters,
+    options: THREE.ShaderMaterialParameters,
     uniforms: Uniform,
     frag_src: string | null,
     vert_src: string | null,

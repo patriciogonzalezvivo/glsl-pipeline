@@ -165,14 +165,16 @@ uniform sampler2D   u_doubleBuffer0;
     return (
         <>
             <directionalLight color={new Color("pink")} ref={lightRef} position={new Vector3(0, 10, 8)} castShadow />
-            <mesh castShadow receiveShadow>
-                <sphereGeometry args={[1, 64, 32]}/>
-                <GlslPipelineReact ref={shaderRef} transparent={true} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'SPHERE'} />
-            </mesh>
-            <mesh castShadow receiveShadow>
-                <coneGeometry args={[0.5, 1.0, 32]} />
-                <GlslPipelineReact ref={shaderRef} transparent={true} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'CONE'} />
-            </mesh>
+            <group visible>
+                <mesh castShadow receiveShadow>
+                    <sphereGeometry args={[1, 64, 32]}/>
+                    <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'SPHERE'} />
+                </mesh>
+                <mesh castShadow receiveShadow>
+                    <coneGeometry args={[0.5, 1.0, 32]} />
+                    <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'CONE'} />
+                </mesh>
+            </group>
         </>
     )
 }

@@ -1,4 +1,4 @@
-import { createRef } from 'react'
+import { useRef } from 'react'
 import { useThree, useFrame, extend, Object3DNode } from '@react-three/fiber'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -25,7 +25,7 @@ const CameraControls = () => {
     } = useThree();
 
     // Ref to the controls, so that we can update them on every frame using useFrame
-    const controls = createRef<OrbitControls>();
+    const controls = useRef<OrbitControls>();
     useFrame(() => controls.current.update());
     return (
         <orbitControls

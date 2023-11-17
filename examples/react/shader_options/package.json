@@ -1,5 +1,5 @@
 {
-  "name": "2d_clock_react",
+  "name": "shader_options",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-three/fiber": "^8.15.11",
     "glsl-pipeline": "^1.0.6",
+    "leva": "^0.9.35",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "resolve-lygia": "^1.0.4",

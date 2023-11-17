@@ -16,7 +16,7 @@ import {
 
 import { addCallback, callbacks, removeCallback, isPerspectiveCamera, GlslPipelineClass, GlslPipelineProperties, callbackRender, MaterialConstructor, PipelineReactParams } from '../../types';
 
-export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef(<T extends MaterialConstructor>(
+export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T extends MaterialConstructor>(
     { 
         type = "scene", 
         uniforms, 
@@ -66,7 +66,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef(<T extends Mat
         glsl.load(fragmentShader, vertexShader);
 
         return glsl;
-    }, [uniforms, fragmentShader, vertexShader, gl, camera]);
+    }, [uniforms, fragmentShader, vertexShader, gl, props]);
 
     useFrame((state) => {
         if (autoRender) {
@@ -123,8 +123,8 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef(<T extends Mat
         }
     }, [resize, onResize, pipeline]);
 
-    return <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} {...props} />
-});
+    return <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
+}));
 
 // For React Dev Tools Display Name
 GlslPipelineReact.displayName = 'GlslPipelineReact'

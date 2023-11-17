@@ -1,7 +1,7 @@
 {
   "name": "3d_trails",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@react-three/fiber": "^8.15.11",
-    "glsl-pipeline": "^1.0.6",
+    "glsl-pipeline": "^2.0.0",
     "resolve-lygia": "^1.0.4",
     "three": "^0.158.0"
   }

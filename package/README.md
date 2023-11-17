@@ -8,7 +8,7 @@ GlslPipeline also handles some basic uniforms such as `u_resolution`, `u_mouse`,
 
 All these specs are based 100% on the [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer/wiki) workflow and are designed so you can start your prototypes there and then port them to WebGL using [ThreeJS](https://github.com/mrdoob/three.js) in a few seconds by just loading your shader code in GlslPipeline. 
 
-> **_It supports both Vanilla and React!_**
+> **_It supports both Vanilla and React! Typescript also supported!_**
 
 ## Install, load and run your shader
 
@@ -100,7 +100,7 @@ export default App
 
 If you want to use geometry you will need to create a scene and a camera, provide a vertex and fragment shader and then render the scene using `renderScene` method:
 
-> You don't have to set `renderScene` in react. By default, the props for `type='scene'`. Hence, it will render your shader as a scene.
+> 💡 React Note: You don't have to set `renderScene` in react. By default, the props for `type='scene'` will handle automatically on render the scene.
 <details>
     <summary>Show Vanilla example</summary>
 
@@ -246,7 +246,7 @@ function App() {
 <details>
     <summary>Show React Typescript example</summary>
 
-```jsx
+```tsx
 import { GlslPipelineReact, useGlslPipeline } from 'glsl-pipeline/r3f'
 import { GlslPipelineClass } from 'glsl-pipeline/types'
 
@@ -302,6 +302,88 @@ function App() {
 ```
 </details>
 
+### Shader Material Options
+
+Now you can add more options into the `GlslPipeline` & `GlslPipelineReact` as example below:
+
+<details>
+    <summary>Show Vanilla Example</summary>
+
+```js
+import { GlslPipeline } from 'glsl-pipeline';
+import * as THREE from 'three';
+
+const renderer = new WebGLRenderer();
+const sandbox = new GlslPipeline(renderer, {
+    // Optional uniforms object to pass to the shader
+    u_color: { value: new Vector3(1.0, 0.0, 0.0) },
+    u_speed: { value: 0.5 },
+    ...
+},{
+    side: THREE.DoubleSide,
+    wireframe: true
+});
+
+sandbox.load(fragment_shader);
+
+const draw = () => {
+    sandbox.renderMain();
+    requestAnimationFrame(draw);
+};
+
+const resize = () => {
+    sandbox.setSize(window.innerWidth, window.innerHeight);
+};
+
+window.addEventListener("resize", resize);
+resize();
+
+draw();
+```
+</details>
+
+<details>
+    <summary>Show React Example</summary>
+
+```jsx
+import { GlslPipelineReact, useGlslPipeline } from 'glsl-pipeline/r3f'
+import * as THREE from 'three';
+
+function MainShader(props){
+    const shaderRef = React.useRef();
+
+    const fragmentShader = React.useMemo(() => `varying vec4 v_texcoord;
+    uniform float u_time;
+
+    void main(void){
+        gl_FragColor = vec4(vec3(mod(u_time, 3.)), 1.);
+    }`);
+
+    useGlslPipeline(({ uniforms }, { size }) => {
+        // This hook runs on render (60 fps)
+        console.log("Get current uniforms:", uniforms);
+        console.log("useThree() states:", size);
+    }, shaderRef);
+
+    return (
+        <mesh>
+            <planeGeometry args={[10, 10, 10, 10]} />
+            <GlslPipelineReact wireframe side={THREE.DoubleSide} ref={shaderRef} fragmentShader={fragmentShader} {...props} />
+        </mesh>
+    )
+}
+
+function App() {
+
+  return (
+    <Canvas>
+        <MainShader />
+    </Canvas>
+  )
+}
+```
+</details>
+
 ### `GlslPipelineReact` Properties
 | Properties | Type | Available Values | Default Value | Description |
 | ---------- | ---- | ---------------- | ------------- |----------- |
@@ -313,6 +395,7 @@ function App() {
 | resize | boolean | true \| false | true | Automatically resize GlslPipelineReact or not. |
 | autoRender | boolean | true \| false | true | Automatically render GlslPipelineReact or not. |
 | renderPriority | number | any number | 0 | `useFrame` render priority value as refer to this [documentation](https://docs.pmnd.rs/react-three-fiber/api/hooks#taking-over-the-render-loop)
+| ...props | THREE.ShaderMaterialParameters | { [key: string]: any } | - | This is an options value for `ShaderMaterial` class. You can refer more parameters here for [ShaderMaterialParameters](https://github.com/three-types/three-ts-types/blob/ba58d77ba6fa6cd0e02ef5736637677ee8d97787/types/three/src/materials/ShaderMaterial.d.ts#L6) & [MaterialParameters](https://github.com/three-types/three-ts-types/blob/ba58d77ba6fa6cd0e02ef5736637677ee8d97787/types/three/src/materials/Material.d.ts#L18C1-L18C1)
 
 ### `useGlslPipeline` Hook
 As refer to the above example, the `useGlslPipeline` hook will send you all the `GlslPipeline` properties with `useThree` states so that you can manipulate the uniforms directly from there.
@@ -568,31 +651,56 @@ git clone git@github.com:patriciogonzalezvivo/glsl-pipeline.git
 ```
 
 And then:
+> This project is specifically build for `yarn`
 
 ```sh
-npm install
+yarn
 ```
 
 Once installed, you can test/build the demo like this:
 
 ```sh
-# to run demo dev server/scripts
-npm run dev
+# to run demo dev for React examples
+yarn dev-react
 
-# to run demo build scripts
-npm run build
+# to run demo dev for Vanilla examples
+yarn dev-vanilla
 ```
 
-Then locally, open the following links with your browser:
+Then you will encounter similar output to your console like this:
+```sh
+  VITE v4.5.0  ready in 248 ms
 
-* http://localhost:5173
-* http://localhost:5173/examples/2d_clock.html
-* http://localhost:5173/examples/2d_trails.html
-* http://localhost:5173/examples/2d_reaction_diffusion.html
-* http://localhost:5173/examples/3d_trails.html
-* http://localhost:5173/examples/3d_pbr_shadow.html
-* http://localhost:5173/examples/3d_pbr_shadow_dof.html
-* http://localhost:5173/examples/3d_pbr_shadow_enviroment.html
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h to show help
+```
+
+You can enter keyboard `h` to view more info and enter `o` for opening the example test to your browser automatically:
+
+### Change example package to test
+In `package.json` file on the root folder, you'll see:
+```json
+{
+    "dev-vanilla": "preconstruct dev && yarn workspace <package-name> dev",
+    "dev-react": "preconstruct dev && yarn workspace <package-name> dev",
+}
+```
+Simply change the `<package-name>` to other example package names inside these directories:
+- `/examples/react`
+- `/examples/vanilla`
+
+> ⚠️ NOTE: The `<package-name>` must be without directory name. 
+
+```json
+{
+    ❌ "dev-vanilla": "preconstruct dev && yarn workspace examples/react/<package-name> dev",
+    ✅ "dev-vanilla": "preconstruct dev && yarn workspace <package-name> dev",
+}
+```
+
+## Contributions
+If you would like to contribute to this package. Please refer this [documentation](./CONTRIBUTING.md).
 
 
 ## License

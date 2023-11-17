@@ -5,6 +5,9 @@
   "main": "index.js",
   "license": "MIT",
   "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",
+  "maintainers": [
+    "Amin Shazrin (https://github.com/ammein)"
+  ],
   "scripts": {
     "build": "preconstruct build",
     "dev-vanilla": "preconstruct dev && yarn workspace 2d_clock dev",

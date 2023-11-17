@@ -100,7 +100,7 @@ export default App
 
 If you want to use geometry you will need to create a scene and a camera, provide a vertex and fragment shader and then render the scene using `renderScene` method:
 
-> You don't have to set `renderScene` in react. It is automatically render to scene unless you change prop for `GlslPipelineReact` on `autoRender={false}`
+> You don't have to set `renderScene` in react. By default, the props for `type='scene'`. Hence, it will render your shader as a scene.
 <details>
     <summary>Show Vanilla example</summary>
 

@@ -17,13 +17,15 @@ import {
     RGBAFormat,
     NearestFilter,
     DepthTexture,
+    Material,
 } from 'three';
 
-import { Uniform, Buffers, DoubleBuffers, SceneBuffers, BufferSize, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
+import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
 
 class GlslPipeline implements GlslPipelineClass {
     public renderer: THREE.WebGLRenderer
     public defines: { [key: string]: any }
+    public options: THREE.MaterialParameters
     public uniforms: Uniform
     public frag_src: string | null
     public vert_src: string | null
@@ -45,13 +47,14 @@ class GlslPipeline implements GlslPipelineClass {
     public time: number
     public resolution: THREE.Vec2
 
-    constructor(renderer: THREE.WebGLRenderer, uniforms = {} as Uniform) {
+    constructor(renderer: THREE.WebGLRenderer, uniforms = {} as Uniform, options = {} as THREE.MaterialParameters) {
         if (!renderer.capabilities.floatFragmentTextures)
             throw new Error("No OES_texture_float support for float textures.");
 
         this.renderer = renderer;
 
         this.defines = { 'PLATFORM_WEBGL': '1' };
+        this.options = options;
         this.uniforms = uniforms;
         this.frag_src = null;
         this.vert_src = null;
@@ -88,7 +91,7 @@ class GlslPipeline implements GlslPipelineClass {
         this.billboard_camera = /* @__PURE__ */ new Camera();
         this.billboard_camera.position.z = 1;
         this.passThruUniforms = { texture: { value: null } };
-        this.passThruShader = createShaderMaterial(this.passThruUniforms, {}, getPassThroughFragmentShader());
+        this.passThruShader = createShaderMaterial(this.passThruUniforms, {}, options, getPassThroughFragmentShader());
 
         this.mesh = /* @__PURE__ */ new Mesh(new PlaneGeometry(2, 2), this.passThruShader);
         this.billboard_scene.add(this.mesh);
@@ -155,7 +158,7 @@ class GlslPipeline implements GlslPipelineClass {
             }
         }
 
-        this.material = createShaderMaterial(this.uniforms, this.defines, this.frag_src, this.vert_src);
+        this.material = createShaderMaterial(this.uniforms, this.defines, this.options, this.frag_src, this.vert_src);
 
         const found_postprocessing = this.frag_src.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*POSTPROCESSING)(?:\s*\))|(?:#ifdef)(?:\s*POSTPROCESSING)(?:\s*))/gm);
         if (found_postprocessing)
@@ -179,21 +182,21 @@ class GlslPipeline implements GlslPipelineClass {
     branchMaterial(name: string | Array<string>) {
         if(Array.isArray(name)) {
             let names = name.map((str) => `#define ${str.toUpperCase()}\n`).filter(Boolean).join('');
-            return createShaderMaterial(this.uniforms, this.defines, `${names}${this.frag_src}`, `${names}${this.vert_src}`,);
+            return createShaderMaterial(this.uniforms, this.defines, this.options, `${names}${this.frag_src}`, `${names}${this.vert_src}`,);
         }
         else {
-            return createShaderMaterial(this.uniforms, this.defines, `#define ${name.toUpperCase()}\n${this.frag_src}`, `#define ${name.toUpperCase()}\n${this.vert_src}`,);
+            return createShaderMaterial(this.uniforms, this.defines, this.options, `#define ${name.toUpperCase()}\n${this.frag_src}`, `#define ${name.toUpperCase()}\n${this.vert_src}`,);
         }
     }
 
     addBackground() {
-        this.background = createShaderMaterial(this.uniforms, this.defines, `#define BACKGROUND\n${this.frag_src}`);
+        this.background = createShaderMaterial(this.uniforms, this.defines, this.options, `#define BACKGROUND\n${this.frag_src}`);
         return this.background;
     }
 
     addBuffer(width: number, height: number) {
         let index = this.buffers.length;
-        let material = createShaderMaterial(this.uniforms, this.defines, `#define BUFFER_${index}\n${this.frag_src}`);
+        let material = createShaderMaterial(this.uniforms, this.defines, this.options, `#define BUFFER_${index}\n${this.frag_src}`);
         let b = {
             name: `u_buffer${index}`,
             material: material,
@@ -216,7 +219,7 @@ class GlslPipeline implements GlslPipelineClass {
 
     addDoubleBuffer(width: number, height: number) {
         let index = this.doubleBuffers.length;
-        let material = createShaderMaterial(this.uniforms, this.defines, `#define DOUBLE_BUFFER_${index}\n${this.frag_src}`);
+        let material = createShaderMaterial(this.uniforms, this.defines, this.options, `#define DOUBLE_BUFFER_${index}\n${this.frag_src}`);
         let db = {
             name: `u_doubleBuffer${index}`,
             material: material,
@@ -239,7 +242,7 @@ class GlslPipeline implements GlslPipelineClass {
     }
 
     addPostprocessing() {
-        this.postprocessing = createShaderMaterial(this.uniforms, this.defines, `#define POSTPROCESSING\n${this.frag_src}`);
+        this.postprocessing = createShaderMaterial(this.uniforms, this.defines, this.options, `#define POSTPROCESSING\n${this.frag_src}`);
         this.sceneBuffer = {
             renderTarget: null,
             width: this.renderer.domElement.width,
@@ -529,13 +532,14 @@ class GlslPipeline implements GlslPipelineClass {
     }
 }
 
-function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, fragmentShader: string, vertexShader?:  string | null) {
+function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, options: THREE.MaterialParameters, fragmentShader: string, vertexShader?:  string | null) {
     let material = /* @__PURE__ */ new ShaderMaterial({
         uniforms: uniforms === undefined ? {} : uniforms,
         vertexShader: vertexShader || getPassThroughVertexShader(),
         fragmentShader,
+        ...options
     });
-    material.defines = defines;
+    material.defines = Object.assign({}, defines, options.defines);
 
     return material;
 }

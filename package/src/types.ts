@@ -1,10 +1,39 @@
 import * as THREE from 'three';
 
 import { RootState } from '@react-three/fiber';
+import { Assign } from 'utility-types';
 
 export type Uniform = { [key: string]: THREE.IUniform<any> }
 
-export type MaterialConstructor = new (opts: { [key: string]: any }) => THREE.Material
+export type MaterialConstructor = new (options: Assign<THREE.MaterialParameters, GlslPipelineReactProps>) => THREE.Material
+type MaterialParams<T extends MaterialConstructor> = ConstructorParameters<T>[0]
+export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass>, 'ref'> {
+    type?: "scene" | "main" | undefined,
+    uniforms?: Uniform,
+    fragmentShader: string,
+    vertexShader?: string | null,
+    branch?: string | Array<string>,
+    resize?: boolean,
+    autoRender?: boolean,
+    renderPriority?: number
+}
+
+export interface iCSMPatchMap {
+    [keyword: string]: {
+        [toReplace: string]: string
+    }
+}
+
+export type PipelineReactParams<T extends MaterialConstructor> = {
+    type?: "scene" | "main" | undefined,
+    uniforms?: Uniform,
+    fragmentShader: string,
+    vertexShader?: string | null,
+    branch?: string | Array<string>,
+    resize?: boolean,
+    autoRender?: boolean,
+    renderPriority?: number
+} & (MaterialParams<T> extends undefined ? {} : MaterialParams<T>)
 
 export interface Buffers extends THREE.RenderTargetOptions {
     name: string,
@@ -42,6 +71,7 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
 export interface GlslPipelineProperties {
     renderer: THREE.WebGLRenderer,
     defines: { [key: string]: any },
+    options: THREE.MaterialParameters,
     uniforms: Uniform,
     frag_src: string | null,
     vert_src: string | null,
@@ -84,17 +114,6 @@ export interface GlslPipelineClass extends GlslPipelineProperties {
     renderTarget(material: THREE.Material, output: THREE.WebGLRenderTarget): void,
     setSize(width: number, height: number): void,
     dispose(): void
-}
-
-export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass>, 'ref'> {
-    type?: "scene" | "main" | undefined,
-    uniforms?: Uniform,
-    fragmentShader: string,
-    vertexShader?: string | null,
-    branch?: string | Array<string>,
-    resize?: boolean,
-    autoRender?: boolean,
-    renderPriority?: number,
 }
 
 export type callbackRender = (props: GlslPipelineClass, state: RootState) => void

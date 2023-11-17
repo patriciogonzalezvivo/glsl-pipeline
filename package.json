@@ -7,7 +7,7 @@
   "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",
   "scripts": {
     "build": "preconstruct build",
-    "dev-vanilla": "preconstruct dev && yarn workspace 3d_trails dev",
+    "dev-vanilla": "preconstruct dev && yarn workspace 2d_clock dev",
     "dev-react": "preconstruct dev && yarn workspace typescript_postprocessing dev",
     "postinstall": "preconstruct dev && manypkg check",
     "ci": "preconstruct validate && manypkg check && yarn build",

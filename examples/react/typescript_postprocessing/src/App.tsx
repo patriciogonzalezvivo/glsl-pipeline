@@ -8,7 +8,9 @@ function App() {
   return (
     <>
       <div className='main'>
-        <Canvas>
+        <Canvas gl={{
+          alpha: true
+        }}>
           <CameraControls />
           <MyEffect />
         </Canvas>

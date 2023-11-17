@@ -11,7 +11,9 @@ let width = W.innerWidth;
 let height = W.innerHeight;
 let pixelRatio = W.devicePixelRatio;
 
-const renderer = new WebGLRenderer();
+const renderer = new WebGLRenderer({
+  alpha: true
+});
 renderer.setPixelRatio(pixelRatio);
 renderer.setSize(width, height);
 D.appendChild(renderer.domElement);
@@ -91,7 +93,9 @@ const shader_frag = resolveLygia(/* glsl */`
         }`);
 
 // GLSL Buffers
-const glsl_sandbox = new GlslPipeline(renderer);
+const glsl_sandbox = new GlslPipeline(renderer, {} , {
+  transparent: true
+});
 glsl_sandbox.load(shader_frag);
 
 const draw = () => {

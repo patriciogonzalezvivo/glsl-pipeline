@@ -1,9 +1,9 @@
 import * as React from 'react'
 
 import {
+    RootState,
     useFrame,
-    useThree,
-    RootState
+    useThree
 } from "@react-three/fiber"
 
 import {
@@ -14,9 +14,9 @@ import {
     GlslPipelineContext
 } from "../hooks"
 
-import { GlslPipelineReactProps, addCallback, callbacks, removeCallback, isPerspectiveCamera, GlslPipelineClass, GlslPipelineProperties, callbackRender } from '../../types';
+import { addCallback, callbacks, removeCallback, isPerspectiveCamera, GlslPipelineClass, GlslPipelineProperties, callbackRender, MaterialConstructor, PipelineReactParams } from '../../types';
 
-export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineClass, GlslPipelineReactProps>((
+export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef(<T extends MaterialConstructor>(
     { 
         type = "scene", 
         uniforms, 
@@ -25,10 +25,10 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineCl
         branch, 
         resize = true, 
         autoRender = true, 
-        renderPriority = 0, 
-        ...props 
-    } : GlslPipelineReactProps, 
-        ref
+        renderPriority = 0,
+        ...props
+    } : PipelineReactParams<T>, 
+        ref: React.Ref<GlslPipelineClass>
     ) => {
 
     const { gl, camera, size } = useThree();
@@ -60,9 +60,8 @@ export const GlslPipelineReact = /* @__PURE__ */ React.forwardRef<GlslPipelineCl
         }
     }, []);
 
-    const pipeline = React.useMemo<GlslPipelineClass>(() => {
-
-        const glsl = new GlslPipeline(gl, uniforms);
+    const pipeline = React.useMemo(() => {
+        const glsl = new GlslPipeline(gl, uniforms, props);
 
         glsl.load(fragmentShader, vertexShader);
 

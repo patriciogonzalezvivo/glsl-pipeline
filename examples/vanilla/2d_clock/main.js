@@ -93,9 +93,7 @@ const shader_frag = resolveLygia(/* glsl */`
         }`);
 
 // GLSL Buffers
-const glsl_sandbox = new GlslPipeline(renderer, {} , {
-  transparent: true
-});
+const glsl_sandbox = new GlslPipeline(renderer);
 glsl_sandbox.load(shader_frag);
 
 const draw = () => {

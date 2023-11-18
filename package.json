@@ -1,39 +1,39 @@
 {
-  "name": "glsl-pipeline",
-  "version": "1.0.6",
-  "description": "Prototype complex pipelines directly from a single shader by branching it into stages.",
+  "name": "glsl-pipeline-monorepo",
+  "private": true,
+  "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:patriciogonzalezvivo/glsl-pipeline.git"
-  },
-  "homepage": "https://github.com/patriciogonzalezvivo/glsl-pipeline",
-  "bugs": {
-    "url": "https://github.com/patriciogonzalezvivo/glsl-pipeline/issues"
-  },
-  "keywords": [
-    "glsl",
-    "pipeline",
-    "webgl",
-    "threejs",
-    "three",
-    "buffer",
-    "ping",
-    "pong",
-    "glslViewer"
+  "maintainers": [
+    "Patricio Gonzalez Vivo (https://github.com/patriciogonzalezvivo)",
+    "Mario Carrillo (https://github.com/marioecg)",
+    "Amin Shazrin (https://github.com/ammein)"
   ],
-  "devDependencies": {
-    "vite": "^4.4.9",
-    "resolve-lygia": "^1.0.4"
+  "scripts": {
+    "build": "preconstruct build",
+    "dev-vanilla": "preconstruct dev && yarn workspace 2d_clock dev",
+    "dev-react": "preconstruct dev && yarn workspace typescript_shader_options dev",
+    "postinstall": "preconstruct dev && manypkg check",
+    "ci": "preconstruct validate && manypkg check && yarn build",
+    "release": "chmod +x ./scripts/release.sh && ./scripts/release.sh",
+    "clean": "rm -rf node_modules package/dist package/r3f/dist package/node_modules package/types/dist examples/**/**/node_modules examples/**/**/package-lock.json yarn.lock package-lock.json",
+    "update": "chmod +x ./scripts/updateAll.sh && ./scripts/updateAll.sh"
+  },
+  "workspaces": {
+    "packages": [
+      "package",
+      "examples/**/*"
+    ]
+  },
+  "preconstruct": {
+    "packages": [
+      "package"
+    ]
   },
   "dependencies": {
-    "three": "^0.155.0"
+    "@changesets/cli": "^2.26.2",
+    "@manypkg/cli": "^0.21.0",
+    "@preconstruct/cli": "^2.8.1"
   }
 }

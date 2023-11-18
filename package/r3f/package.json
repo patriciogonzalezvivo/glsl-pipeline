@@ -1,0 +1,4 @@
+{
+  "main": "dist/glsl-pipeline-r3f.cjs.js",
+  "module": "dist/glsl-pipeline-r3f.esm.js"
+}

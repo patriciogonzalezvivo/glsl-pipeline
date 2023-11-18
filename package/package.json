@@ -1,0 +1,94 @@
+{
+  "name": "glsl-pipeline",
+  "private": false,
+  "version": "2.0.0",
+  "description": "Prototype complex pipelines directly from a single shader by branching it into stages using React Three Fiber/React.",
+  "main": "dist/glsl-pipeline.cjs.js",
+  "module": "dist/glsl-pipeline.esm.js",
+  "types": "types/dist/glsl-pipeline.cjs.d.ts",
+  "sideEffects": false,
+  "type": "module",
+  "files": [
+    "dist/**",
+    "r3f/**",
+    "types/**",
+    "README.md",
+    "LICENSE.md",
+    "package.json"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "r3f.ts",
+      "types.ts"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/patriciogonzalezvivo/glsl-pipeline.git"
+  },
+  "keywords": [
+    "glsl",
+    "pipeline",
+    "webgl",
+    "threejs",
+    "three",
+    "buffer",
+    "ping",
+    "pong",
+    "glslViewer",
+    "react-three-fiber",
+    "r3f",
+    "react"
+  ],
+  "scripts": {
+    "dev": "preconstruct watch",
+    "build": "preconstruct build"
+  },
+  "author": "Patricio Gonzalez Vivo <patriciogonzalezvivo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patriciogonzalezvivo/glsl-pipeline/issues"
+  },
+  "homepage": "https://github.com/patriciogonzalezvivo/glsl-pipeline#readme",
+  "peerDependencies": {
+    "@react-three/fiber": ">=^8.15.11",
+    "react": ">=18.2.0",
+    "three": ">=0.158"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "utility-types": "^3.10.0",
+    "zustand": "^4.4.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-class-properties": "^7.23.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-flow": "^7.23.3",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.23.3",
+    "@babel/runtime": "^7.23.2",
+    "@react-three/fiber": "^8.15.11",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/react": "^18.2.37",
+    "@types/three": "^0.158.2",
+    "json": "^11.0.0",
+    "react": "^18.2.0",
+    "rollup": "^4.3.0",
+    "three": "^0.158.0",
+    "typescript": "^5.2.2"
+  }
+}

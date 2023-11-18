@@ -1,0 +1,8 @@
+# 2d_reaction_diffusion
+
+## 0.0.1
+
+### Patch Changes
+
+- Updated dependencies
+  - glsl-pipeline@2.0.0

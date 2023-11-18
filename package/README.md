@@ -708,7 +708,7 @@ Special thanks to main contributors:
 * [Matt Henderson](https://github.com/matthen)
 
 ## Contributions
-If you would like to contribute to this package. Please refer this [documentation](./CONTRIBUTING.md).
+If you would like to contribute to this package. Please refer this [documentation](https://github.com/patriciogonzalezvivo/glsl-pipeline/blob/master/package/CONTRIBUTING.md).
 
 ## License
 

@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/patriciogonzalezvivo/glsl-pipeline#readme",
   "peerDependencies": {
-    "@react-three/fiber": ">=^8.15.11",
+    "@react-three/fiber": ">=8.15.11",
     "react": ">=18.2.0",
     "three": ">=0.158"
   },

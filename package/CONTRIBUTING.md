@@ -108,7 +108,7 @@ export default class GlslPipline ...
 export * from "./class"
 
 // In index.ts
-export * from "./react-modules"
+export * from "./vanilla-modules"
 
 // Import example
 import { ... } from 'glsl-pipeline'
@@ -161,15 +161,15 @@ Inside `package.json` on root folder, you'll see:
 As you can see `preconstruct dev` will run the `/package` folder to build the raw files into `dist` folders using babel and continously run with yarn workspace linking.
 
 ### Add new examples
-Unfortunately, you cannot run workspace when creating a new folder package using `create-vite`. Inside `/examples` contains two directories for other cloners to run the example:
+Unfortunately, you cannot run workspace when creating a new folder package using `create-vite`. Inside `/examples` contains two types directories for other cloners to run the example:
 - `react`
 - `vanilla`
 
 You must run this script inside either two directories above to build your own new example:
 
 ```bash
-# In /exampels/react
-yarn create-vite
+# In /examples/react-js
+yarn create vite
 ```
 
 Then it will shows an interactive console for you to setup on your own example.
@@ -193,3 +193,54 @@ yarn build
 2. Changeset command
 
 To publish new version, you must follow the [Changesets/Cli Guideline](https://www.npmjs.com/package/@changesets/cli)
+
+```bash
+# Build the package first
+yarn build
+
+# For contributor, run & answers the provided questions.
+yarn changeset
+
+# For maintainers wants to release packages, they should run
+yarn changeset version
+
+# Then for anyone to publish, run
+yarn changeset publish
+```
+
+# Troubleshooting
+## Error after create new example files using `yarn create vite`
+
+If you receive this kind of error:
+```bash
+yarn run v1.22.19
+$ preconstruct validate && manypkg check && yarn build
+🎁 info glsl-pipeline/r3f a valid entry point exists.
+🎁 info glsl-pipeline/r3f main field is valid
+🎁 info glsl-pipeline/r3f module field is valid
+🎁 info glsl-pipeline a valid entry point exists.
+🎁 info glsl-pipeline main field is valid
+🎁 info glsl-pipeline module field is valid
+🎁 info glsl-pipeline/types a valid entry point exists.
+🎁 info glsl-pipeline/types main field is valid
+🎁 info glsl-pipeline/types module field is valid
+🎁 success project is valid!
+☔️ error typescript_postprocessing has a dependency on @typescript-eslint/eslint-plugin@^6.0.0 but the most common range in the repo is ^6.10.0, the range should be set to ^6.10.0
+☔️ error typescript_postprocessing has a dependency on @typescript-eslint/parser@^6.0.0 but the most common range in the repo is ^6.10.0, the range should be set to ^6.10.0
+☔️ error typescript_shader_options has a dependency on @types/react-dom@^18.2.15 but the most common range in the repo is ^18.2.7, the range should be set to ^18.2.7
+☔️ error typescript_shader_options has a dependency on @vitejs/plugin-react@^4.2.0 but the most common range in the repo is ^4.0.3, the range should be set to ^4.0.3
+☔️ error typescript_shader_options has a dependency on eslint@^8.53.0 but the most common range in the repo is ^8.45.0, the range should be set to ^8.45.0
+☔️ error typescript_shader_options has a dependency on eslint-plugin-react-refresh@^0.4.4 but the most common range in the repo is ^0.4.3, the range should be set to ^0.4.3
+☔️ error typescript_shader_options has a dependency on vite@^5.0.0 but the most common range in the repo is ^4.4.5, the range should be set to ^4.4.5
+☔️ error typescript_shader_options has a dependency on glsl-pipeline@^1.0.6 but the version of glsl-pipeline in the repo is 2.0.0 which is not within range of the depended on version, please update the dependency version
+☔️ info the above errors may be fixable with yarn manypkg fix
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+```
+
+Simply fix this by following its instructions:
+```bash
+yarn manypkg fix
+```
+
+Or you can download the packages on each error output manually.

@@ -66,7 +66,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
         glsl.load(fragmentShader, vertexShader);
 
         return glsl;
-    }, [uniforms, fragmentShader, vertexShader, gl, props]);
+    }, [fragmentShader, vertexShader, gl, uniforms, props]);
 
     useFrame((state) => {
         if (autoRender) {
@@ -87,7 +87,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
         if (pipeline) {
             GlslPipelineContext.setState({ addCallback, removeCallback });
         }
-    }, [pipeline, addCallback, removeCallback, GlslPipelineContext]);
+    }, [addCallback, removeCallback]);
 
     const material = React.useMemo(() => branch ? pipeline.branchMaterial(branch) : pipeline.material, [pipeline, branch]);
 

@@ -3,9 +3,10 @@ import * as THREE from 'three';
 import { RootState } from '@react-three/fiber';
 import { Assign } from 'utility-types';
 
-export type Uniform = { [key: string]: THREE.IUniform<any> }
+export type Uniform = { [uniform: string]: THREE.IUniform<any> }
 
 export type MaterialConstructor = new (options: Assign<THREE.ShaderMaterialParameters, GlslPipelineReactProps>) => THREE.Material
+
 type MaterialParams<T extends MaterialConstructor> = ConstructorParameters<T>[0]
 export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass>, 'ref'> {
     type?: "scene" | "main" | undefined,
@@ -16,12 +17,6 @@ export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass
     resize?: boolean,
     autoRender?: boolean,
     renderPriority?: number
-}
-
-export interface iCSMPatchMap {
-    [keyword: string]: {
-        [toReplace: string]: string
-    }
 }
 
 export type PipelineReactParams<T extends MaterialConstructor> = {
@@ -96,7 +91,7 @@ export interface GlslPipelineClass extends GlslPipelineProperties {
     getBufferSize(name: string): BufferSize
     load(frag_src: string, vert_src?: string | null): void,
     reset(): void,
-    branchMaterial(name: string | Array<string>): void,
+    branchMaterial(name: string | Array<string>): THREE.ShaderMaterial,
     addBackground(): void,
     addBuffer(width: number, height: number): Buffers,
     addDoubleBuffer(width: number, height: number): DoubleBuffers,

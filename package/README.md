@@ -195,7 +195,7 @@ function MainShader(props){
     const shaderRef = React.useRef();
     const secondShaderRef = React.useRef();
 
-    const fragmentShader = React.useMemo<string>(() => `varying vec4 v_texcoord;
+    const fragmentShader = React.useMemo(() => `varying vec4 v_texcoord;
     uniform float u_time;
 
     void main(void){
@@ -657,7 +657,7 @@ And then:
 yarn
 ```
 
-Once installed, you can test/build the demo like this:
+Once installed, you can test the demo like this:
 
 ```sh
 # to run demo dev for React examples
@@ -687,21 +687,28 @@ In `package.json` file on the root folder, you'll see:
 }
 ```
 Simply change the `<package-name>` to other example package names inside these directories:
-- `/examples/react`
-- `/examples/vanilla`
+- `/examples/react-js`
+- `/examples/react-ts`
+- `/examples/vanilla-js`
+- `/examples/vanilla-ts`
 
 > ⚠️ NOTE: The `<package-name>` must be without directory name. 
 
 ```json
 {
-    ❌ "dev-vanilla": "preconstruct dev && yarn workspace examples/react/<package-name> dev",
+    ❌ "dev-vanilla": "preconstruct dev && yarn workspace examples/react-js/<package-name> dev",
     ✅ "dev-vanilla": "preconstruct dev && yarn workspace <package-name> dev",
 }
 ```
 
+## Acknowledgements 
+Special thanks to main contributors: 
+* [Amin Shazrin](https://github.com/ammein/) 
+* [Mario Carrillo](https://github.com/marioecg)
+* [Matt Henderson](https://github.com/matthen)
+
 ## Contributions
 If you would like to contribute to this package. Please refer this [documentation](./CONTRIBUTING.md).
-
 
 ## License
 

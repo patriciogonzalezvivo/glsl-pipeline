@@ -1,0 +1,5 @@
+---
+"glsl-pipeline": minor
+---
+
+bumping

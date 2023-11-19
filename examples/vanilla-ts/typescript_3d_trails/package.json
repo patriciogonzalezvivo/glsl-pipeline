@@ -11,5 +11,11 @@
   "devDependencies": {
     "typescript": "^5.2.2",
     "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "@types/three": "^0.158.2",
+    "glsl-pipeline": "^2.0.2",
+    "resolve-lygia": "^1.0.4",
+    "three": "^0.158.0"
   }
 }

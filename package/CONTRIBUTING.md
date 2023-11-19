@@ -201,7 +201,7 @@ yarn build
 # For contributor, run & answers the provided questions.
 yarn changeset
 
-# For maintainers wants to release packages, they should run
+# To release packages, run
 yarn changeset version
 
 # Then for anyone to publish, run
@@ -215,16 +215,6 @@ If you receive this kind of error:
 ```bash
 yarn run v1.22.19
 $ preconstruct validate && manypkg check && yarn build
-🎁 info glsl-pipeline/r3f a valid entry point exists.
-🎁 info glsl-pipeline/r3f main field is valid
-🎁 info glsl-pipeline/r3f module field is valid
-🎁 info glsl-pipeline a valid entry point exists.
-🎁 info glsl-pipeline main field is valid
-🎁 info glsl-pipeline module field is valid
-🎁 info glsl-pipeline/types a valid entry point exists.
-🎁 info glsl-pipeline/types main field is valid
-🎁 info glsl-pipeline/types module field is valid
-🎁 success project is valid!
 ☔️ error typescript_postprocessing has a dependency on @typescript-eslint/eslint-plugin@^6.0.0 but the most common range in the repo is ^6.10.0, the range should be set to ^6.10.0
 ☔️ error typescript_postprocessing has a dependency on @typescript-eslint/parser@^6.0.0 but the most common range in the repo is ^6.10.0, the range should be set to ^6.10.0
 ☔️ error typescript_shader_options has a dependency on @types/react-dom@^18.2.15 but the most common range in the repo is ^18.2.7, the range should be set to ^18.2.7

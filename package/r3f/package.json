@@ -1,4 +1,5 @@
 {
   "main": "dist/glsl-pipeline-r3f.cjs.js",
-  "module": "dist/glsl-pipeline-r3f.esm.js"
+  "module": "dist/glsl-pipeline-r3f.esm.js",
+  "types": "dist/glsl-pipeline-r3f.cjs.d.ts"
 }

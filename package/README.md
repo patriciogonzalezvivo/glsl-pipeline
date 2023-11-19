@@ -205,7 +205,7 @@ function MainShader(props){
     useGlslPipeline((props, state) => {
         // This hook runs on render (60 fps)
         // This will run on second priority
-        secondShaderRef.current.renderScene(props.scene, props.camera);
+        secondShaderRef.current.renderScene(state.scene, state.camera);
     }, secondShaderRef, 2);
 
     useGlslPipeline((props, state) => {
@@ -264,7 +264,7 @@ function MainShader(props){
     useGlslPipeline((props, state) => {
         // This hook runs on render (60 fps)
         // This will run on second priority
-        secondShaderRef.current.renderScene(props.scene, props.camera);
+        secondShaderRef.current.renderScene(state.scene, state.camera);
     }, secondShaderRef, 2);
 
     useGlslPipeline((props, state) => {
@@ -635,7 +635,7 @@ void main() {
 
 * `uniform sampler2D u_sceneDepth`: color texture buffer of the scene, available on `POSTPROCESSING` subshader. [Learn more about it here](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES#buffers-and-render-passes)
 
-* `uniform sampler2D u_ligthShadowMap`: Shadow map
+* `uniform sampler2D u_lightShadowMap`: Shadow map
 
 * `uniform sampler2D u_buffer[number]`: extra buffers forked with the define flag `BUFFER_[number]` on a subshaders. [learn more about this here](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES#buffers-and-render-passes)
 
@@ -708,8 +708,8 @@ Special thanks to main contributors:
 * [Matt Henderson](https://github.com/matthen)
 
 ## Contributions
-If you would like to contribute to this package. Please refer this [documentation](https://github.com/patriciogonzalezvivo/glsl-pipeline/blob/master/package/CONTRIBUTING.md).
+If you would like to contribute to this package. Please refer this [documentation](https://github.com/patriciogonzalezvivo/glsl-pipeline/blob/main/package/CONTRIBUTING.md).
 
 ## License
 
-MIT, see [LICENSE.md](http://github.com/patriciogonzalezvivo/glsl-pipeline/blob/master/LICENSE.md) for details.
+MIT, see [LICENSE.md](http://github.com/patriciogonzalezvivo/glsl-pipeline/blob/main/LICENSE.md) for details.

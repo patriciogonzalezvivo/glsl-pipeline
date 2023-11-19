@@ -8,6 +8,7 @@ export type Uniform = { [uniform: string]: THREE.IUniform<any> }
 export type MaterialConstructor = new (options: Assign<THREE.ShaderMaterialParameters, GlslPipelineReactProps>) => THREE.Material
 
 type MaterialParams<T extends MaterialConstructor> = ConstructorParameters<T>[0]
+
 export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass>, 'ref'> {
     type?: "scene" | "main" | undefined,
     uniforms?: Uniform,

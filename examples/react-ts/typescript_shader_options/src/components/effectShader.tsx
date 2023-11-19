@@ -4,7 +4,7 @@ import { Camera, Size, useThree } from '@react-three/fiber';
 import { resolveLygia } from 'resolve-lygia'
 import * as THREE from 'three';
 import { useControls } from 'leva'
-import { GlslPipelineClass, isPerspectiveCamera } from 'glsl-pipeline/src/types-helper';
+import { GlslPipelineClass, isPerspectiveCamera } from 'glsl-pipeline/types';
 
 // eslint-disable-next-line no-unused-vars
 const Effect = () => {

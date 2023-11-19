@@ -1,4 +1,5 @@
 {
     "main": "dist/glsl-pipeline-types.cjs.js",
-    "module": "dist/glsl-pipeline-types.esm.js"
+    "module": "dist/glsl-pipeline-types.esm.js",
+    "types": "dist/glsl-pipeline-types.cjs.d.ts"
 }

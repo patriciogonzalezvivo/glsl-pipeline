@@ -416,7 +416,7 @@ As refer to the above example, the `useGlslPipeline` hook will send you all the 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | callback | (props: GlslPipelineProperties, state: ReactThreeFiber.RootState) => void | You can set any value here or debug the value in here during 60fps render. |
-| ref |  React.MutableRefObject\<GlslPipelineClass \| undefined\> | To use which ref is refered to. |
+| ref |  React.MutableRefObject\<GlslPipelineClass \| null\> | To use which ref is refered to. |
 | priority | number | Priority of callback (lower priority callbacks are called first) |
 
 ## PIPELINE STAGES

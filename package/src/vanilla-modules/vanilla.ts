@@ -17,9 +17,8 @@ import {
     RGBAFormat,
     NearestFilter,
     DepthTexture,
+    MathUtils
 } from 'three';
-
-import { generateUUID } from 'three/src/math/MathUtils';
 
 import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
 
@@ -53,7 +52,7 @@ class GlslPipeline implements GlslPipelineClass {
         if (!renderer.capabilities.floatFragmentTextures)
             throw new Error("No OES_texture_float support for float textures.");
 
-        this.id = generateUUID();
+        this.id = MathUtils.generateUUID();
 
         this.renderer = renderer;
 

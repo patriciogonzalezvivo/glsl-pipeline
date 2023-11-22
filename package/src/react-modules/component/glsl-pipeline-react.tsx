@@ -35,8 +35,8 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
 
     const callbacks = React.useRef<callbacks[]>([]);
 
-    const addCallback = React.useCallback<addCallback>((callback, priority) => {
-        callbacks.current.push({ callback, priority });
+    const addCallback = React.useCallback<addCallback>((callback, priority, pipeline) => {
+        callbacks.current.push({ callback, priority, pipeline });
         callbacks.current.sort((a, b) => a.priority - b.priority);
     }, []);
 
@@ -54,9 +54,9 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
         }, {} as any);
     }, []);
 
-    const onRender = React.useCallback<callbackRender>((p, s) => {
+    const onRender = React.useCallback<callbackRender>((s) => {
         for (let i = 0; i < callbacks.current.length; i++) {
-            callbacks.current[i].callback(filtered(p), s);
+            callbacks.current[i].callback(filtered(callbacks.current[i].pipeline), s);
         }
     }, []);
 
@@ -74,13 +74,13 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
                 case "scene":
                     pipeline.renderScene(state.scene, state.camera);
                     break;
-                
+
                 case "main":
                     pipeline.renderMain();
                     break;
             }
         }
-        onRender(pipeline, state);
+        onRender(state);
     }, renderPriority);
 
     React.useEffect(() => {

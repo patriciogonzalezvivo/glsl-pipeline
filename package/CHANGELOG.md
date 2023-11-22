@@ -1,5 +1,13 @@
 # glsl-pipeline
 
+## 2.0.4
+
+### Patch Changes
+
+- f4802b3: installing
+- f4802b3: Small fix
+- f4802b3: bumping
+
 ## 2.0.3
 
 ### Patch Changes

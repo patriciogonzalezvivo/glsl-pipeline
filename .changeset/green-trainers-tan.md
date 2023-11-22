@@ -1,5 +1,0 @@
----
-"glsl-pipeline": major
----
-
-installing

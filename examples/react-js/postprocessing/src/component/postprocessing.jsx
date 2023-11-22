@@ -1,20 +1,41 @@
 /* eslint-disable react/no-unknown-property */
-import { useRef, useMemo } from "react"
+import { useRef, useMemo, createRef } from "react"
 import { useThree, extend } from '@react-three/fiber'
-import { GlslPipelineReact } from "glsl-pipeline/r3f"
+import { GlslPipelineReact, useGlslPipeline } from "glsl-pipeline/r3f"
 import { Vector3 } from 'three'
 
 import { resolveLygia } from 'resolve-lygia'
 import { DirectionalLight, Color } from 'three'
+import { useControls } from 'leva'
 
 extend({ DirectionalLight });
 
 
 export default function MyEffect() {
 
-    const shaderRef = useRef();
-    const lightRef = useRef();
+    const shaderRef = useRef(null);
+    const shaderSecondRef = createRef();
+    const lightRef = useRef(null);
 
+    const { speedFirst } = useControls('Sphere Shader', {
+        speedFirst: {
+            value: 1.,
+            min: 0.,
+            max: 10.0,
+            step: 0.1,
+            label: 'Speed'
+        }
+    });
+
+    const { speedSecond } = useControls('Cone Shader', {
+        speedSecond: {
+            value: 1.,
+            min: 0.,
+            max: 10.0,
+            step: 0.1,
+            label: 'Speed'
+        }
+    });
     const { camera, gl } = useThree();
 
     useMemo(() => {
@@ -106,6 +127,7 @@ uniform sampler2D   u_doubleBuffer0;
             uniform mat4    u_projectionMatrix;
             uniform mat4    u_viewMatrix;
             uniform mat4    u_modelMatrix;
+            uniform float   speed;
 
             uniform mat4    u_lightMatrix;
             varying vec4    v_lightCoord;
@@ -120,17 +142,17 @@ uniform sampler2D   u_doubleBuffer0;
             #include "lygia/math/rotate4dX.glsl"
             #include "lygia/math/rotate4dY.glsl"
             #include "lygia/math/rotate4dZ.glsl"
-            
+
             void main(void) {
                 v_position = vec4(position, 1.0);
                 v_normal = normal;
                 v_texcoord = uv;
-                
+
                 #ifdef USE_TANGENT
                 v_tangent = tangent;
                 #endif
 
-                float time = u_time * 3.0;
+                float time = u_time * speed;
                 float dist = sin(u_time) + 2.0;
 
                 #ifdef SPHERE
@@ -150,16 +172,34 @@ uniform sampler2D   u_doubleBuffer0;
                 gl_Position = projectionMatrix * viewMatrix * v_position;
             }`), [])
 
+    // eslint-disable-next-line no-unused-vars
+    useGlslPipeline(({ id, uniforms }, _state) => {
+        console.log("Run Second: ", id, uniforms);
+    }, shaderSecondRef, 2)
+
+    useGlslPipeline(({ id, uniforms }) => {
+        console.log("Run First: ", id, uniforms);
+        uniforms.speed.value = speedFirst;
+    }, shaderRef, 1)
+
     return (
         <>
             <directionalLight color={new Color("pink")} ref={lightRef} position={new Vector3(0, 10, 8)} castShadow />
             <mesh castShadow receiveShadow>
                 <sphereGeometry args={[1, 64, 32]}/>
-                <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'SPHERE'} />
+                <GlslPipelineReact ref={shaderRef} uniforms={{
+                    speed: {
+                        value: 1.
+                    }
+                }} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'SPHERE'} />
             </mesh>
             <mesh castShadow receiveShadow>
                 <coneGeometry args={[0.5, 1.0, 32]} />
-                <GlslPipelineReact ref={shaderRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'CONE'} />
+                <GlslPipelineReact ref={shaderSecondRef} uniforms={{
+                    speed: {
+                        value: speedSecond
+                    }
+                }} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'CONE'} />
             </mesh>
         </>
     )

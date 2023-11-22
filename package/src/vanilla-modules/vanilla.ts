@@ -17,12 +17,13 @@ import {
     RGBAFormat,
     NearestFilter,
     DepthTexture,
-    Material,
+    MathUtils
 } from 'three';
 
 import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
 
 class GlslPipeline implements GlslPipelineClass {
+    public id: string
     public renderer: THREE.WebGLRenderer
     public defines: { [key: string]: any }
     public options: THREE.ShaderMaterialParameters
@@ -50,6 +51,8 @@ class GlslPipeline implements GlslPipelineClass {
     constructor(renderer: THREE.WebGLRenderer, uniforms = {} as Uniform, options = {} as THREE.ShaderMaterialParameters) {
         if (!renderer.capabilities.floatFragmentTextures)
             throw new Error("No OES_texture_float support for float textures.");
+
+        this.id = MathUtils.generateUUID();
 
         this.renderer = renderer;
 

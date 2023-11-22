@@ -1,7 +1,7 @@
 {
   "name": "2d_clock",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "glsl-pipeline": "^2.0.2",
+    "glsl-pipeline": "^2.0.4",
     "resolve-lygia": "^1.0.4",
     "three": "^0.158.0"
   }

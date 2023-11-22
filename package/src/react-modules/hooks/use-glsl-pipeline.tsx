@@ -1,12 +1,8 @@
 import * as React from 'react'
 
-import {
-    GlslPipeline
-} from "../../index"
-
 import { create } from "zustand"
 
-import { GlslPipelineProperties, ZustandStore, useGlslPipelineCallback, GlslPipelineClass } from '../../types';
+import { ZustandStore, useGlslPipelineCallback, GlslPipelineClass } from '../../types';
 
 export const GlslPipelineContext = create<ZustandStore>(() => ({}));
 
@@ -16,7 +12,7 @@ export function useGlslPipeline(callback: useGlslPipelineCallback, ref: React.Mu
     React.useEffect(() => {
         if (!callback || !addCallback || !removeCallback || !ref.current) return;
 
-        addCallback(callback, priority);
+        addCallback(callback, priority, ref.current);
 
         return () => {
             removeCallback(callback);

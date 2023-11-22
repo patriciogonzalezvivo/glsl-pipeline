@@ -388,10 +388,10 @@ function App() {
 | Properties | Type | Available Values | Default Value | Description |
 | ---------- | ---- | ---------------- | ------------- |----------- |
 | type | string | 'main' \| 'scene' | 'scene' | To determine how GlslPipeline will render. |
-| uniforms | object | none | null | You can insert your own uniforms here. |
-| fragmentShader | string | none | null | You must insert your own fragmentShader string here. |
-| vertexShader | string | none | null | This is optional either you can insert your own vertexShader or just leave it empty. |
-| branch | string \| Array\<string\> | none | null | You can set your own define(s) named here. It will uppercase the string of your defined name. |
+| uniforms | object | none | - | You can insert your own uniforms here. |
+| fragmentShader | string | none | - | You must insert your own fragmentShader string here. |
+| vertexShader | string | none | [getPassThroughVertexShader()](https://github.com/patriciogonzalezvivo/glsl-pipeline/blob/main/package/src/vanilla-modules/vanilla.ts) | This is optional either you can insert your own vertexShader or just leave it empty. |
+| branch | string \| Array\<string\> | none | - | You can set your own define(s) named here. It will uppercase the string of your defined name. |
 | resize | boolean | true \| false | true | Automatically resize GlslPipelineReact or not. |
 | autoRender | boolean | true \| false | true | Automatically render GlslPipelineReact or not. |
 | renderPriority | number | any number | 0 | `useFrame` render priority value as refer to this [documentation](https://docs.pmnd.rs/react-three-fiber/api/hooks#taking-over-the-render-loop)
@@ -416,7 +416,7 @@ As refer to the above example, the `useGlslPipeline` hook will send you all the 
 | Argument | Type | Description |
 | -------- | ---- | ----------- |
 | callback | (props: GlslPipelineProperties, state: ReactThreeFiber.RootState) => void | You can set any value here or debug the value in here during 60fps render. |
-| ref |  React.MutableRefObject\<GlslPipelineClass \| undefined\> | To use which ref is refered to. |
+| ref |  React.MutableRefObject\<GlslPipelineClass \| null\> | To use which ref is refered to. |
 | priority | number | Priority of callback (lower priority callbacks are called first) |
 
 ## PIPELINE STAGES

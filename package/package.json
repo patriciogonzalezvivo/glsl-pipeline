@@ -1,7 +1,7 @@
 {
   "name": "glsl-pipeline",
   "private": false,
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Prototype complex pipelines directly from a single shader by branching it into stages using React Three Fiber/React.",
   "main": "dist/glsl-pipeline.cjs.js",
   "module": "dist/glsl-pipeline.esm.js",

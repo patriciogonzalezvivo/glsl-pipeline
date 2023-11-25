@@ -1,7 +1,6 @@
 import * as React from 'react'
 
 import {
-    RootState,
     useFrame,
     useThree
 } from "@react-three/fiber"
@@ -123,7 +122,17 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
         }
     }, [resize, onResize, pipeline]);
 
-    return <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
+    return (
+        <>
+            {
+                type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> :
+                <mesh>
+                    <planeGeometry args={[2, 2]} />
+                    <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
+                </mesh>
+            }
+        </>
+    )
 }));
 
 // For React Dev Tools Display Name

@@ -1,5 +1,28 @@
 # glsl-pipeline
 
+## 2.0.5 - 2.0.6
+
+### Patch Changes
+
+- 2fe8dfa: - Update examples package to use leva to test different hooks value.
+  - Added new `id` property in glsl-pipeline class to determine its unique initializer being used in React environment.
+  - Update glsl-pipeline hooks.
+  - Added more "Render Main" examples.
+  - Fix "Render Main" ungenerated mesh on `billboard_scene` due to how the react code component structured using material as object attached. Provide conditional `primitive` component for specific type like this:
+  ```tsx
+    return (
+      <>
+          {
+              type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> :
+              <mesh>
+                  <planeGeometry args={[2, 2]} />
+                  <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
+              </mesh>
+          }
+      </>
+    )
+  ```
+
 ## 2.0.4
 
 ### Patch Changes
@@ -8,7 +31,7 @@
 - f4802b3: Small fix
 - f4802b3: bumping
 
-## 2.0.3
+## 2.0.1 - 2.0.3
 
 ### Patch Changes
 

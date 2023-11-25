@@ -182,15 +182,7 @@ yarn workspace <your-new-package-name> add <package-dependencies-install>
 ## Publish Npm Package
 This package use `changesets/cli` commands for easily.
 
-1. Run Build from root folder
-
-You must run build first to produce `dist` folders that contains all the necessary code that has been minify for production used from installers.
-```bash
-# From Root Folder
-yarn build
-```
-
-2. Changeset command
+### For "Owner" wants to release the package:
 
 To publish new version, you must follow the [Changesets/Cli Guideline](https://www.npmjs.com/package/@changesets/cli)
 
@@ -206,6 +198,25 @@ yarn changeset version
 
 # Then for anyone to publish, run
 yarn changeset publish
+```
+---
+
+### For "Maintainers" wants to release the package:
+
+You only need to do these commands, then **push a PR to the owner Github**:
+```bash
+# Add Changeset, answers provided questions. 
+# (Use Arrow Key to select package `glsl-pipeline`, press Spacebar to select, then press Enter to confirm)
+yarn changeset add
+
+# Release the version to let changeset update CHANGELOG.md file. You may tweak it if you like
+yarn changeset version
+```
+
+Then for Owner when merged the PR, simply do one simple step command from **root** folder:
+```bash
+# Run Release script from root
+yarn release
 ```
 
 # Troubleshooting

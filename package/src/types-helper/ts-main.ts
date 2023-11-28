@@ -10,26 +10,17 @@ export type MaterialConstructor = new (options: Assign<THREE.ShaderMaterialParam
 type MaterialParams<T extends MaterialConstructor> = ConstructorParameters<T>[0]
 
 export interface GlslPipelineReactProps extends Omit<React.Ref<GlslPipelineClass>, 'ref'> {
-    type?: "scene" | "main" | undefined;
+    type?: "scene" | "main";
     uniforms?: Uniform;
     fragmentShader: string;
-    vertexShader?: string | null;
+    vertexShader?: string;
     branch?: string | Array<string>;
     resize?: boolean;
     autoRender?: boolean;
     renderPriority?: number;
 }
 
-export type PipelineReactParams<T extends MaterialConstructor> = {
-    type?: "scene" | "main" | undefined;
-    uniforms?: Uniform;
-    fragmentShader: string;
-    vertexShader?: string | null;
-    branch?: string | Array<string>;
-    resize?: boolean;
-    autoRender?: boolean;
-    renderPriority?: number;
-} & (MaterialParams<T> extends undefined ? {} : MaterialParams<T>)
+export type PipelineReactParams<T extends MaterialConstructor> = GlslPipelineReactProps & (MaterialParams<T> extends undefined ? {} : MaterialParams<T>)
 
 export interface Buffers extends THREE.RenderTargetOptions {
     name: string;

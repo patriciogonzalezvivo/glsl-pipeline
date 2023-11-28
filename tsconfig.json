@@ -1,24 +1,21 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "lib": [
-            "es2019",
-            "dom"
-        ],
-        "module": "commonjs",
-        "moduleResolution": "Node",
-        "esModuleInterop": false,
-        "allowSyntheticDefaultImports": false,
-        "jsx": "react",
-        "pretty": true,
-        "strict": true,
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
         "skipLibCheck": true,
-        "declaration": true,
-        "removeComments": true,
-        "emitDeclarationOnly": true,
-        "outDir": "dist",
-        "noImplicitAny": false,
-        "noImplicitThis": false,
+        "strictBindCallApply": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "noFallthroughCasesInSwitch": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "jsx": "preserve",
         "baseUrl": "./package/src"
     },
     "include": [
@@ -29,6 +26,7 @@
     "exclude": [
         "./node_modules/**/*",
         "dist",
+        "examples/*",
         "**/*.test.ts"
     ]
 }

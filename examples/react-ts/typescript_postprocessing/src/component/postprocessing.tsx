@@ -13,7 +13,10 @@ extend({ DirectionalLight });
 
 export default function MyEffect() {
 
+    // Mutate value in `useGlslPipeline` hook
     const shaderRef = useRef<GlslPipelineClass | null>(null);
+
+    // Unmutate value in `useGlslPipeline` hook. The uniform value cannot be change if using `createRef`. To mutate, use `useRef`.
     const shaderSecondRef = createRef<GlslPipelineClass>();
     const lightRef = useRef<DirectionalLight | null>(null);
 

@@ -1815,6 +1815,11 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
+"@react-three/babel@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@react-three/babel/-/babel-1.0.1.tgz#5d9a2df68b083be2133c4cc550895fbe2a4c6a7f"
+  integrity sha512-zf/JiXdNGD+j1NSpNxEAslEgWFB9B6RNOTie/3ucCy8o0Wsz7OxirLKHL7UFXcsUErgXFZWl+oC2GpFJc7d16Q==
+
 "@react-three/fiber@^8.15.11":
   version "8.15.11"
   resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-8.15.11.tgz#e93bfd761a70099dcc80508d69c2540797a8f74e"

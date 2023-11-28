@@ -125,7 +125,7 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
     return (
         <>
             {
-                type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> :
+                type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> : type === 'main' &&
                 <mesh>
                     <planeGeometry args={[2, 2]} />
                     <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />

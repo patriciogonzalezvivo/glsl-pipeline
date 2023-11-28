@@ -12,13 +12,13 @@
   ```tsx
     return (
       <>
-          {
-              type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> :
-              <mesh>
-                  <planeGeometry args={[2, 2]} />
-                  <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
-              </mesh>
-          }
+        {
+          type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> : type === 'main' &&
+          <mesh>
+              <planeGeometry args={[2, 2]} />
+              <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
+          </mesh>
+        }
       </>
     )
   ```

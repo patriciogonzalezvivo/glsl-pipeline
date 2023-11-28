@@ -9,7 +9,7 @@ function App() {
       <>
         <div className='main'>
           <Canvas gl={{
-            alpha: false
+            alpha: true
           }}>
             <GlslViewer />
           </Canvas>

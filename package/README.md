@@ -252,7 +252,7 @@ import { GlslPipelineClass } from 'glsl-pipeline/types'
 
 function MainShader(props){
     const shaderRef = React.useRef<GlslPipelineClass | null>(null);
-    const secondShaderRef = React.createRef<GlslPipelineClass>();
+    const secondShaderRef = React.useRef<GlslPipelineClass | null>(null);
 
     const fragmentShader = React.useMemo(() => `varying vec4 v_texcoord;
     uniform float u_time;
@@ -418,6 +418,8 @@ As refer to the above example, the `useGlslPipeline` hook will send you all the 
 | callback | (props: GlslPipelineProperties, state: ReactThreeFiber.RootState) => void | You can set any value here or debug the value in here during 60fps render. |
 | ref |  React.MutableRefObject\<GlslPipelineClass \| null\> | To use which ref is refered to. |
 | priority | number | Priority of callback (lower priority callbacks are called first) |
+
+> If you use `createRef` as `ref` second argument, the value returns in `useGlslPipeline` hook will not be mutated. If you want to adjust the value from hook, preferable use `useRef`.
 
 ## PIPELINE STAGES
 

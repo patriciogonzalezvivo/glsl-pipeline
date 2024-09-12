@@ -6,7 +6,6 @@ import * as THREE from 'three';
 import { useControls } from 'leva'
 import { GlslPipelineClass, isPerspectiveCamera } from 'glsl-pipeline/types';
 
-// eslint-disable-next-line no-unused-vars
 const Effect = () => {
 
     const shaderRef = useRef<GlslPipelineClass | null>(null);

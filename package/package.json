@@ -1,7 +1,7 @@
 {
   "name": "glsl-pipeline",
   "private": false,
-  "version": "2.0.6",
+  "version": "3.0.0",
   "description": "Prototype complex pipelines directly from a single shader by branching it into stages using React Three Fiber/React.",
   "main": "dist/glsl-pipeline.cjs.js",
   "module": "dist/glsl-pipeline.esm.js",
@@ -53,8 +53,8 @@
   "homepage": "https://github.com/patriciogonzalezvivo/glsl-pipeline#readme",
   "peerDependencies": {
     "@react-three/fiber": ">=8.0",
-    "react": ">=18.0",
-    "three": ">=0.154"
+    "react": ">=18.3.0",
+    "three": ">=0.168.0"
   },
   "peerDependenciesMeta": {
     "@react-three/fiber": {
@@ -65,23 +65,23 @@
     }
   },
   "dependencies": {
-    "utility-types": "^3.10.0",
-    "zustand": "^4.4.6"
+    "utility-types": "^3.11.0",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.3",
-    "@babel/preset-env": "^7.23.3",
-    "@babel/preset-flow": "^7.23.3",
-    "@babel/preset-react": "^7.22.15",
-    "@babel/preset-typescript": "^7.23.3",
-    "@babel/runtime": "^7.23.2",
-    "@react-three/fiber": "^8.15.11",
-    "@types/react": "^18.2.37",
-    "@types/three": "^0.158.2",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-flow": "^7.24.7",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@babel/runtime": "^7.25.6",
+    "@react-three/fiber": "^8.17.7",
+    "@types/react": "^18.3.5",
+    "@types/three": "^0.168.0",
     "babel-preset-minify": "^0.5.2",
     "json": "^11.0.0",
-    "react": "^18.2.0",
-    "three": "^0.158.0",
-    "typescript": "^5.2.2"
+    "react": "^18.3.1",
+    "three": "^0.168.0",
+    "typescript": "^5.6.2"
   }
 }

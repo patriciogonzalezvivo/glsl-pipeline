@@ -14,43 +14,57 @@ import {
     ClampToEdgeWrapping,
     FloatType,
     HalfFloatType,
+    UnsignedByteType,
     RGBAFormat,
     NearestFilter,
     DepthTexture,
-    MathUtils
+    MathUtils,
+    WebGLRenderer,
+    ShaderMaterialParameters,
+    Material,
+    PerspectiveCamera,
+    OrthographicCamera
 } from 'three';
 
 import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
 
 class GlslPipeline implements GlslPipelineClass {
     public id: string
-    public renderer: THREE.WebGLRenderer
+    public renderer: WebGLRenderer
+    public forceFloatTexture: Boolean = false;
+    public forceFloatTextureLinear: Boolean = false;
     public defines: { [key: string]: any }
-    public options: THREE.ShaderMaterialParameters
+    public options: ShaderMaterialParameters
     public uniforms: Uniform
     public frag_src: string | null
     public vert_src: string | null
     public light: Lights | null
     public buffers: Array<Buffers>
     public doubleBuffers: Array<DoubleBuffers>
-    public background: THREE.Material | null
-    public material: THREE.Material | null
+    public background: Material | null
+    public material: Material | null
     public sceneBuffer: SceneBuffers | null
-    public postprocessing: THREE.Material | null
-    public billboard_scene: THREE.Scene
-    public billboard_camera: THREE.Camera
+    public postprocessing: Material | null
+    public billboard_scene: Scene
+    public billboard_camera: Camera
     private passThruUniforms: Uniform
-    private passThruShader: THREE.Material
-    public mesh: THREE.Mesh
-    public clock: THREE.Clock
+    private passThruShader: Material
+    public mesh: Mesh
+    public clock: Clock
     public frame: number
     public lastTime: number
     public time: number
-    public resolution: THREE.Vec2
+    public resolution: Vector2
+    public floatType: typeof FloatType | typeof HalfFloatType | typeof UnsignedByteType
 
-    constructor(renderer: THREE.WebGLRenderer, uniforms = {} as Uniform, options = {} as THREE.ShaderMaterialParameters) {
-        if (!renderer.capabilities.floatFragmentTextures)
-            throw new Error("No OES_texture_float support for float textures.");
+    constructor(renderer: WebGLRenderer, uniforms = {} as Uniform, options = {} as ShaderMaterialParameters) {
+        if (renderer.extensions.has("OES_texture_float") || this.forceFloatTexture){
+            this.floatType = FloatType
+        } else if (renderer.extensions.has("OES_texture_half_float") || this.forceFloatTextureLinear) {
+            this.floatType = HalfFloatType
+        } else {
+            this.floatType = UnsignedByteType
+        }
 
         this.id = MathUtils.generateUUID();
 
@@ -286,11 +300,6 @@ class GlslPipeline implements GlslPipelineClass {
         b.minFilter = b.minFilter || NearestFilter;
         b.magFilter = b.magFilter || NearestFilter;
 
-        let type = FloatType as typeof FloatType | typeof HalfFloatType;
-
-        if (this.renderer.capabilities.isWebGL2 === false)
-            type = HalfFloatType;
-
         let w = b.width;
         let h = b.height;
 
@@ -299,7 +308,7 @@ class GlslPipeline implements GlslPipelineClass {
             h *= this.renderer.domElement.height;
         }
 
-        let depth: THREE.DepthTexture | undefined = undefined;
+        let depth: DepthTexture | undefined = undefined;
         if (b.depth)
             depth = /* @__PURE__ */ new DepthTexture(w, h);
 
@@ -309,7 +318,7 @@ class GlslPipeline implements GlslPipelineClass {
             minFilter: b.minFilter,
             magFilter: b.magFilter,
             format: RGBAFormat,
-            type: (/(iPad|iPhone|iPod)/g.test(navigator.userAgent)) ? HalfFloatType : type,
+            type: this.floatType,
             stencilBuffer: false,
             depthTexture: depth,
         });
@@ -317,7 +326,7 @@ class GlslPipeline implements GlslPipelineClass {
         return renderTarget;
     }
 
-    updateUniforms(camera = null as THREE.PerspectiveCamera | THREE.OrthographicCamera | null) {
+    updateUniforms(camera = null as PerspectiveCamera | OrthographicCamera | null) {
 
         this.time = this.clock.getElapsedTime();
 
@@ -441,12 +450,12 @@ class GlslPipeline implements GlslPipelineClass {
 
         this.uniforms.u_resolution.value = this.resolution;
 
-        this.mesh.material = this.material as THREE.Material;
+        this.mesh.material = this.material as Material;
         this.renderer.render(this.billboard_scene, this.billboard_camera);
         this.mesh.material = this.passThruShader;
     }
 
-    renderScene(scene: THREE.Scene, camera: THREE.PerspectiveCamera | THREE.OrthographicCamera) {
+    renderScene(scene: Scene, camera: PerspectiveCamera | OrthographicCamera) {
         this.updateUniforms(camera);
 
         this.updateBuffers();
@@ -467,13 +476,13 @@ class GlslPipeline implements GlslPipelineClass {
             this.uniforms.u_scene.value = this.sceneBuffer.renderTarget?.texture;
             this.uniforms.u_sceneDepth.value = this.sceneBuffer.renderTarget?.depthTexture;
 
-            this.mesh.material = this.postprocessing as THREE.ShaderMaterial;
+            this.mesh.material = this.postprocessing as ShaderMaterial;
             this.renderer.render(this.billboard_scene, this.billboard_camera);
             this.mesh.material = this.passThruShader;
         }
     }
 
-    renderTarget(material: THREE.Material, output: THREE.WebGLRenderTarget) {
+    renderTarget(material: Material, output: WebGLRenderTarget) {
         this.mesh.material = material;
         this.renderer.setRenderTarget(output);
         // this.renderer.clear();
@@ -535,7 +544,7 @@ class GlslPipeline implements GlslPipelineClass {
     }
 }
 
-function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, options: THREE.ShaderMaterialParameters, fragmentShader: string, vertexShader?:  string | null) {
+function createShaderMaterial(uniforms: Uniform, defines: { [key: string]: any }, options: ShaderMaterialParameters, fragmentShader: string, vertexShader?:  string | null): any {
     let material = /* @__PURE__ */ new ShaderMaterial({
         uniforms: uniforms === undefined ? {} : uniforms,
         vertexShader: vertexShader || getPassThroughVertexShader(),

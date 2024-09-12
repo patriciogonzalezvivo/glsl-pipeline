@@ -58,6 +58,8 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
 export interface GlslPipelineProperties {
     id: string;
     renderer: THREE.WebGLRenderer;
+    forceFloatTexture: Boolean;
+    forceFloatTextureLinear: Boolean;
     defines: { [key: string]: any };
     options: THREE.ShaderMaterialParameters;
     uniforms: Uniform;
@@ -77,14 +79,15 @@ export interface GlslPipelineProperties {
     frame: number;
     lastTime: number;
     time: number;
-    resolution: THREE.Vec2;
+    resolution: THREE.Vector2;
+    floatType: typeof THREE.FloatType | typeof THREE.HalfFloatType | typeof THREE.UnsignedByteType;
 }
 
 export interface GlslPipelineClass extends GlslPipelineProperties {
     getBufferSize(name: string): BufferSize;
     load(frag_src: string, vert_src?: string | null): void;
     reset(): void;
-    branchMaterial(name: string | Array<string>): THREE.ShaderMaterial;
+    branchMaterial(name: string | Array<string>): THREE.ShaderMaterial | THREE.Material;
     addBackground(): void;
     addBuffer(width: number, height: number): Buffers;
     addDoubleBuffer(width: number, height: number): DoubleBuffers;

@@ -58,8 +58,6 @@ export interface GlslPipelineRenderTargets extends THREE.RenderTargetOptions {
 export interface GlslPipelineProperties {
     id: string;
     renderer: THREE.WebGLRenderer;
-    forceFloatTexture: Boolean;
-    forceFloatTextureLinear: Boolean;
     defines: { [key: string]: any };
     options: THREE.ShaderMaterialParameters;
     uniforms: Uniform;

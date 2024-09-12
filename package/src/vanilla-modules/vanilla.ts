@@ -31,8 +31,6 @@ import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTarget
 class GlslPipeline implements GlslPipelineClass {
     public id: string
     public renderer: WebGLRenderer
-    public forceFloatTexture: Boolean = false;
-    public forceFloatTextureLinear: Boolean = false;
     public defines: { [key: string]: any }
     public options: ShaderMaterialParameters
     public uniforms: Uniform
@@ -58,9 +56,9 @@ class GlslPipeline implements GlslPipelineClass {
     public floatType: typeof FloatType | typeof HalfFloatType | typeof UnsignedByteType
 
     constructor(renderer: WebGLRenderer, uniforms = {} as Uniform, options = {} as ShaderMaterialParameters) {
-        if (renderer.extensions.has("OES_texture_float") || this.forceFloatTexture){
+        if (renderer.extensions.has("OES_texture_float")){
             this.floatType = FloatType
-        } else if (renderer.extensions.has("OES_texture_half_float") || this.forceFloatTextureLinear) {
+        } else if (renderer.extensions.has("OES_texture_half_float")) {
             this.floatType = HalfFloatType
         } else {
             this.floatType = UnsignedByteType

@@ -1,7 +1,7 @@
 {
   "name": "2d_trails",
   "private": true,
-  "version": "0.0.2",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^4.4.5"
+    "vite": "^5.4.4"
   },
   "dependencies": {
-    "glsl-pipeline": "^2.0.4",
+    "glsl-pipeline": "^3.0.0",
     "resolve-lygia": "^1.0.4",
-    "three": "^0.158.0"
+    "three": "^0.168.0"
   }
 }

@@ -13,6 +13,10 @@ import {
     GlslPipelineContext
 } from "../hooks"
 
+import {
+    ShaderMaterial
+} from 'three'
+
 import { addCallback, callbacks, removeCallback, isPerspectiveCamera, GlslPipelineClass, GlslPipelineProperties, callbackRender, MaterialConstructor, PipelineReactParams } from '../../types';
 
 export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T extends MaterialConstructor>(
@@ -45,8 +49,8 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
 
     const filtered = React.useCallback<(pipe: GlslPipelineClass) => GlslPipelineProperties>((pipe) => {
         return (Object.keys(pipe) as Array<keyof typeof GlslPipeline>).reduce((res, key) => {
-            if (typeof pipe[key] !== 'function') {
-                res[key] = pipe[key];
+            if (typeof pipe[key as keyof GlslPipelineClass] !== 'function') {
+                res[key] = pipe[key as keyof GlslPipelineClass];
             }
 
             return res;
@@ -125,10 +129,10 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
     return (
         <>
             {
-                type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> : type === 'main' &&
+                type === 'scene' ? <primitive ref={ref} attach='material' object={material as ShaderMaterial} /> : type === 'main' &&
                 <mesh>
                     <planeGeometry args={[2, 2]} />
-                    <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
+                    <primitive ref={ref} attach='material' object={material as ShaderMaterial} />
                 </mesh>
             }
         </>

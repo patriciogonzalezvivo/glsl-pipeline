@@ -1,5 +1,23 @@
 # glsl-pipeline
 
+## 3.0.0
+
+### Major Changes
+
+- Updated to the latest ThreeJS & React packages using Vite in examples folder.
+  - Fix issue raised from https://github.com/patriciogonzalezvivo/glsl-pipeline/issues/9. Updated the conditional statement when initialised `GlslPipeline` with this. Fix the issue by running UnsignedByteType by default for texture format (https://threejs.org/docs/#api/en/constants/Textures):
+  ```tsx
+  if (renderer.extensions.has("OES_texture_float") || this.forceFloatTexture){
+      this.floatType = FloatType
+  } else if (renderer.extensions.has("OES_texture_half_float") || this.forceFloatTextureLinear) {
+      this.floatType = HalfFloatType
+  } else {
+      this.floatType = UnsignedByteType
+  }
+  ```
+  - Update all examples packages to use latest ThreeJS and React packages so that it can be running smoothly.
+  - Fix typings issues using latest threejs typescript package.
+
 ## 2.0.5 - 2.0.6
 
 ### Patch Changes
@@ -10,17 +28,28 @@
   - Added more "Render Main" examples.
   - Fix "Render Main" ungenerated mesh on `billboard_scene` due to how the react code component structured using material as object attached. Provide conditional `primitive` component for specific type like this:
   ```tsx
-    return (
-      <>
-        {
-          type === 'scene' ? <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} /> : type === 'main' &&
+  return (
+    <>
+      {type === "scene" ? (
+        <primitive
+          ref={ref}
+          attach="material"
+          object={material as THREE.ShaderMaterial}
+        />
+      ) : (
+        type === "main" && (
           <mesh>
-              <planeGeometry args={[2, 2]} />
-              <primitive ref={ref} attach='material' object={material as THREE.ShaderMaterial} />
+            <planeGeometry args={[2, 2]} />
+            <primitive
+              ref={ref}
+              attach="material"
+              object={material as THREE.ShaderMaterial}
+            />
           </mesh>
-        }
-      </>
-    )
+        )
+      )}
+    </>
+  );
   ```
 
 ## 2.0.4

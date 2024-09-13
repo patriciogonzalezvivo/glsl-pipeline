@@ -94,7 +94,6 @@ export default function GlslViewer() {
             gl_FragColor = vec4(color, 1.);
         }`), []);
 
-    // eslint-disable-next-line no-unused-vars
     useGlslPipeline(({ resolution, id, uniforms }) => {
         console.log(resolution, id, uniforms.u_resolution.value);
     }, shader);

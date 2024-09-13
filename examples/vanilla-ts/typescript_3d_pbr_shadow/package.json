@@ -1,7 +1,7 @@
 {
   "name": "typescript_3d_pbr_shadow",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,13 +9,13 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^5.2.2",
-    "vite": "^4.4.5"
+    "typescript": "^5.6.2",
+    "vite": "^5.4.4"
   },
   "dependencies": {
-    "@types/three": "^0.158.2",
-    "glsl-pipeline": "^2.0.4",
+    "@types/three": "^0.168.0",
+    "glsl-pipeline": "^3.0.0",
     "resolve-lygia": "^1.0.4",
-    "three": "^0.158.0"
+    "three": "^0.168.0"
   }
 }

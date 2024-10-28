@@ -23,8 +23,15 @@ import {
     ShaderMaterialParameters,
     Material,
     PerspectiveCamera,
-    OrthographicCamera
+    OrthographicCamera,
+    EquirectangularReflectionMapping,
+    RGBEEncoding,
+    WebGLCubeRenderTarget,
+    CubeCamera,
+    LightProbeGenerator,
 } from 'three';
+
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
 
@@ -56,6 +63,8 @@ class GlslPipeline implements GlslPipelineClass {
     public floatType: typeof FloatType | typeof HalfFloatType | typeof UnsignedByteType
 
     constructor(renderer: WebGLRenderer, uniforms = {} as Uniform, options = {} as ShaderMaterialParameters) {
+        console.log("GLSL Pipeline Initialized");
+        renderer.extensions.has("OES_texture_float")
         if (renderer.extensions.has("OES_texture_float")){
             this.floatType = FloatType
         } else if (renderer.extensions.has("OES_texture_half_float")) {
@@ -289,6 +298,33 @@ class GlslPipeline implements GlslPipelineClass {
         this.uniforms.u_lightShadowMap = { value: null };
         this.defines["LIGHT_SHADOWMAP"] = "u_lightShadowMap";
         this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow?.mapSize.width.toString();
+    }
+
+    setCubemap(hdrUrl: string, scene) {
+        const cubeRenderTarget = new WebGLCubeRenderTarget( 256 );
+        let cubeCamera = new CubeCamera( 1, 1000, cubeRenderTarget );
+        cubeCamera.position.set(0, 1, 0);
+        let lightProbe;
+
+        new RGBELoader()
+            .load( hdrUrl, function ( cubemap ) {
+                cubemap.mapping = EquirectangularReflectionMapping;
+                cubemap.encoding = RGBEEncoding;
+                cubemap.flipY = true;
+
+                scene.background = cubemap;
+                scene.environment = cubemap;
+                this.uniforms.u_cubeMap = { type: 't', value: cubemap};
+
+                cubeCamera.update( this.renderer, scene );
+                const probe = LightProbeGenerator.fromCubeRenderTarget( this.renderer, cubeRenderTarget );
+
+                probe.then( ( p ) => { 
+                    lightProbe = p;
+                    this.uniforms.u_SH.value = lightProbe.sh.coefficients;
+                    this.uniforms.u_cubeMap.value = cubeRenderTarget.texture;
+                } );
+            } );
     }
 
     createRenderTarget(b: GlslPipelineRenderTargets) {

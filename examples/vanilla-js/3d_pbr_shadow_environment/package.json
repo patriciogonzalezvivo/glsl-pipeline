@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^5.4.4"
+    "vite": "^5.4.10"
   },
   "dependencies": {
     "glsl-pipeline": "^3.0.0",
     "resolve-lygia": "^1.0.4",
-    "three": "^0.168.0"
+    "three": "^0.169.0"
   }
 }

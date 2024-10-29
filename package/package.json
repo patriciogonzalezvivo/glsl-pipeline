@@ -66,22 +66,22 @@
   },
   "dependencies": {
     "utility-types": "^3.11.0",
-    "zustand": "^4.5.5"
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.4",
-    "@babel/preset-flow": "^7.24.7",
-    "@babel/preset-react": "^7.24.7",
-    "@babel/preset-typescript": "^7.24.7",
-    "@babel/runtime": "^7.25.6",
-    "@react-three/fiber": "^8.17.7",
-    "@types/react": "^18.3.5",
-    "@types/three": "^0.168.0",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-flow": "^7.25.9",
+    "@babel/preset-react": "^7.25.9",
+    "@babel/preset-typescript": "^7.26.0",
+    "@babel/runtime": "^7.26.0",
+    "@react-three/fiber": "^8.17.10",
+    "@types/react": "^18.3.12",
+    "@types/three": "^0.169.0",
     "babel-preset-minify": "^0.5.2",
     "json": "^11.0.0",
     "react": "^18.3.1",
-    "three": "^0.168.0",
-    "typescript": "^5.6.2"
+    "three": "^0.169.0",
+    "typescript": "^5.6.3"
   }
 }

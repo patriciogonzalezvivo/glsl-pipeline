@@ -23,10 +23,18 @@ import {
     ShaderMaterialParameters,
     Material,
     PerspectiveCamera,
-    OrthographicCamera
+    OrthographicCamera,
+    EquirectangularReflectionMapping,
+    WebGLCubeRenderTarget,
+    CubeCamera,
+    LightProbe,
+    // RGBEEncoding,
 } from 'three';
 
-import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights } from "../types"
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { LightProbeGenerator } from 'three/examples/jsm/lights/LightProbeGenerator';
+
+import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights, CubeMapUniform } from "../types"
 
 class GlslPipeline implements GlslPipelineClass {
     public id: string
@@ -47,6 +55,7 @@ class GlslPipeline implements GlslPipelineClass {
     public billboard_camera: Camera
     private passThruUniforms: Uniform
     private passThruShader: Material
+    private dirty: boolean
     public mesh: Mesh
     public clock: Clock
     public frame: number
@@ -68,11 +77,12 @@ class GlslPipeline implements GlslPipelineClass {
 
         this.renderer = renderer;
 
-        this.defines = { 'PLATFORM_WEBGL': '1' };
+        this.defines = { 'PLATFORM_WEBGL': '2' };
         this.options = options;
         this.uniforms = uniforms;
         this.frag_src = null;
         this.vert_src = null;
+        this.dirty = false;
 
         this.uniforms.u_camera = { value: /* @__PURE__ */ new Vector3() };
         this.uniforms.u_cameraNearClip = { value: 0.0 };
@@ -158,6 +168,7 @@ class GlslPipeline implements GlslPipelineClass {
         }
 
         const found_buffers = this.frag_src?.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*BUFFER_)(\d+)(?:\s*\))|(?:#ifdef)(?:\s*BUFFER_)(\d+)(?:\s*))/gm);
+        this.buffers = [];
         if (found_buffers)
             for (let i = 0; i < found_buffers.length; i++) {
                 let s = this.getBufferSize(`u_buffer${i}`);
@@ -165,6 +176,7 @@ class GlslPipeline implements GlslPipelineClass {
             }
 
         const found_doubleBuffers = frag_src.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*DOUBLE_BUFFER_)(\d+)(?:\s*\))|(?:#ifdef)(?:\s*DOUBLE_BUFFER_)(\d+)(?:\s*))/gm);
+        this.doubleBuffers = [];
         if (found_doubleBuffers) {
             this.renderer.autoClearColor = false;
             for (let i = 0; i < found_doubleBuffers.length; i++) {
@@ -178,6 +190,11 @@ class GlslPipeline implements GlslPipelineClass {
         const found_postprocessing = this.frag_src.match(/(?:^\s*)((?:#if|#elif)(?:\s*)(defined\s*\(\s*POSTPROCESSING)(?:\s*\))|(?:#ifdef)(?:\s*POSTPROCESSING)(?:\s*))/gm);
         if (found_postprocessing)
             this.addPostprocessing();
+    }
+
+    reload() {  
+        this.load(this.frag_src as string, this.vert_src);
+        this.dirty = false;
     }
 
     reset() {
@@ -287,8 +304,76 @@ class GlslPipeline implements GlslPipelineClass {
         this.uniforms.u_lightColor = { value: this.light.color };
         this.uniforms.u_lightIntensity = { value: this.light.intensity };
         this.uniforms.u_lightShadowMap = { value: null };
-        this.defines["LIGHT_SHADOWMAP"] = "u_lightShadowMap";
-        this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow?.mapSize.width.toString();
+
+        var present = [ "LIGHT_SHADOWMAP", "LIGHT_SHADOWMAP_SIZE" ].filter(item => this.defines[item]);
+        if (present.length <= 1) {
+            this.defines["LIGHT_SHADOWMAP"] = "u_lightShadowMap";
+            this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow?.mapSize.width.toString();
+            this.dirty = true;
+        }
+    }
+
+    setCubemap(hdrUrl: string, scene: Scene) {
+        const cubeRenderTarget = new WebGLCubeRenderTarget( 256 );
+        let cubeCamera = new CubeCamera( 1, 1000, cubeRenderTarget );
+        cubeCamera.position.set(0, 1, 0);
+        let lightProbe: LightProbe;
+        let uniforms = this.uniforms;
+        let renderer = this.renderer;
+
+        if (!this.uniforms.u_cubeMap)
+            this.uniforms.u_cubeMap = { value: null };
+
+        if (!this.uniforms.u_SH)
+            this.uniforms.u_SH = { value:[
+                new Vector3(0.0, 0.0, 0.0), 
+                new Vector3(0.0, 0.0, 0.0),
+                new Vector3(0.0, 0.0, 0.0),
+                new Vector3(0.0, 0.0, 0.0),
+                new Vector3(0.0, 0.0, 0.0),
+                new Vector3(0.0, 0.0, 0.0),
+                new Vector3(0.0, 0.0, 0.0),
+                new Vector3(0.0, 0.0, 0.0),
+                new Vector3(0.0, 0.0, 0.0),
+            ]};
+
+        const present = [ "SCENE_SH_ARRAY", "SCENE_CUBEMAP" ].filter(item => this.defines[item]);
+        if (present.length <= 1) {
+            this.defines["SCENE_SH_ARRAY"] = "u_SH";
+            this.defines["SCENE_CUBEMAP"] = "u_cubeMap";
+            this.dirty = true;
+        }
+
+        new RGBELoader()
+            .load( hdrUrl, async function ( cubemap ) {
+                cubemap.mapping = EquirectangularReflectionMapping;
+                cubemap.flipY = true;
+                
+                if (scene) {
+                    scene.background = cubemap;
+                    scene.environment = cubemap;
+                    (uniforms as CubeMapUniform).u_cubeMap.value = cubemap;
+                    cubeCamera.update( renderer, scene );
+                }
+                else {
+                    const cubeScene = new Scene();
+                    cubeScene.background = cubemap;
+                    cubeScene.environment = cubemap;
+                    cubeCamera.update( renderer, cubeScene );
+                }
+
+                const probe = await LightProbeGenerator.fromCubeRenderTarget( renderer, cubeRenderTarget );
+                lightProbe = probe;
+                (uniforms as CubeMapUniform).u_SH.value = lightProbe.sh.coefficients;
+                (uniforms as CubeMapUniform).u_cubeMap.value = cubeRenderTarget.texture;
+            } );
+    }
+
+    setDefine(name: string, value: any = undefined) {
+        if (this.defines[name] === undefined) {
+            this.defines[name] = value === undefined ? '' : value.toString();
+            this.dirty = true;
+        }
     }
 
     createRenderTarget(b: GlslPipelineRenderTargets) {
@@ -325,7 +410,6 @@ class GlslPipeline implements GlslPipelineClass {
     }
 
     updateUniforms(camera = null as PerspectiveCamera | OrthographicCamera | null) {
-
         this.time = this.clock.getElapsedTime();
 
         this.uniforms.u_frame.value = this.frame;
@@ -442,6 +526,9 @@ class GlslPipeline implements GlslPipelineClass {
     }
 
     renderMain() {
+        if (this.dirty)
+            this.reload();
+
         this.updateUniforms();
 
         this.updateBuffers();
@@ -454,6 +541,9 @@ class GlslPipeline implements GlslPipelineClass {
     }
 
     renderScene(scene: Scene, camera: PerspectiveCamera | OrthographicCamera) {
+        if (this.dirty)
+            this.reload();
+
         this.updateUniforms(camera);
 
         this.updateBuffers();

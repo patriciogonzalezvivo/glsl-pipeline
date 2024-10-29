@@ -75,13 +75,13 @@
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
     "@babel/runtime": "^7.25.6",
-    "@react-three/fiber": "^8.17.7",
+    "@react-three/fiber": "^8.17.10",
     "@types/react": "^18.3.5",
     "@types/three": "^0.168.0",
     "babel-preset-minify": "^0.5.2",
     "json": "^11.0.0",
     "react": "^18.3.1",
-    "three": "^0.168.0",
+    "three": "^0.169.0",
     "typescript": "^5.6.2"
   }
 }

@@ -16,6 +16,6 @@
     "@types/three": "^0.168.0",
     "glsl-pipeline": "^3.0.0",
     "resolve-lygia": "^1.0.4",
-    "three": "^0.168.0"
+    "three": "^0.169.0"
   }
 }

@@ -64,8 +64,6 @@ class GlslPipeline implements GlslPipelineClass {
     public floatType: typeof FloatType | typeof HalfFloatType | typeof UnsignedByteType
 
     constructor(renderer: WebGLRenderer, uniforms = {} as Uniform, options = {} as ShaderMaterialParameters) {
-        console.log("GLSL Pipeline Initialized");
-
         renderer.extensions.has("OES_texture_float")
         if (renderer.extensions.has("OES_texture_float")){
             this.floatType = FloatType
@@ -322,8 +320,6 @@ class GlslPipeline implements GlslPipelineClass {
         let lightProbe;
         let uniforms = this.uniforms;
         let renderer = this.renderer;
-        let defines = this.defines;
-        let dirty = this.dirty;
 
         if (!this.uniforms.u_cubeMap)
             this.uniforms.u_cubeMap = { value: null };
@@ -339,7 +335,14 @@ class GlslPipeline implements GlslPipelineClass {
                 new Vector3(0.0, 0.0, 0.0),
                 new Vector3(0.0, 0.0, 0.0),
                 new Vector3(0.0, 0.0, 0.0),
-            ]},
+            ]};
+
+        const present = [ "SCENE_SH_ARRAY", "SCENE_CUBEMAP" ].filter(item => this.defines[item]);
+        if (present.length <= 1) {
+            this.defines["SCENE_SH_ARRAY"] = "u_SH";
+            this.defines["SCENE_CUBEMAP"] = "u_cubeMap";
+            this.dirty = true;
+        }
 
         new RGBELoader()
             .load( hdrUrl, function ( cubemap ) {
@@ -365,13 +368,6 @@ class GlslPipeline implements GlslPipelineClass {
                     uniforms.u_SH.value = lightProbe.sh.coefficients;
                     uniforms.u_cubeMap.value = cubeRenderTarget.texture;
                 } );
-
-                var present = [ "SCENE_SH_ARRAY", "SCENE_CUBEMAP" ].filter(item => defines[item]);
-                if (present.length <= 1) {
-                    defines["SCENE_SH_ARRAY"] = "u_SH";
-                    defines["SCENE_CUBEMAP"] = "u_cubeMap";
-                    dirty = true;
-                }
             } );
     }
 

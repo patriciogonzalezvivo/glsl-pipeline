@@ -306,9 +306,13 @@ class GlslPipeline implements GlslPipelineClass {
         this.uniforms.u_lightColor = { value: this.light.color };
         this.uniforms.u_lightIntensity = { value: this.light.intensity };
         this.uniforms.u_lightShadowMap = { value: null };
-        this.defines["LIGHT_SHADOWMAP"] = "u_lightShadowMap";
-        this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow?.mapSize.width.toString();
-        this.dirty = true;
+
+        var present = [ "LIGHT_SHADOWMAP", "LIGHT_SHADOWMAP_SIZE" ].filter(item => this.defines[item]);
+        if (present.length <= 1) {
+            this.defines["LIGHT_SHADOWMAP"] = "u_lightShadowMap";
+            this.defines["LIGHT_SHADOWMAP_SIZE"] = this.light.shadow?.mapSize.width.toString();
+            this.dirty = true;
+        }
     }
 
     setCubemap(hdrUrl: string, scene: Scene) {
@@ -362,10 +366,20 @@ class GlslPipeline implements GlslPipelineClass {
                     uniforms.u_cubeMap.value = cubeRenderTarget.texture;
                 } );
 
-                defines["SCENE_SH_ARRAY"] = "u_SH";
-                defines["SCENE_CUBEMAP"] = "u_cubeMap";
-                dirty = true;
+                var present = [ "SCENE_SH_ARRAY", "SCENE_CUBEMAP" ].filter(item => defines[item]);
+                if (present.length <= 1) {
+                    defines["SCENE_SH_ARRAY"] = "u_SH";
+                    defines["SCENE_CUBEMAP"] = "u_cubeMap";
+                    dirty = true;
+                }
             } );
+    }
+
+    setDefine(name: string, value: any = undefined) {
+        if (this.defines[name] === undefined) {
+            this.defines[name] = value === undefined ? '' : value.toString();
+            this.dirty = true;
+        }
     }
 
     createRenderTarget(b: GlslPipelineRenderTargets) {
@@ -535,7 +549,7 @@ class GlslPipeline implements GlslPipelineClass {
     renderScene(scene: Scene, camera: PerspectiveCamera | OrthographicCamera) {
         if (this.dirty)
             this.reload();
-        
+
         this.updateUniforms(camera);
 
         this.updateBuffers();

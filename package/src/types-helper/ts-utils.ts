@@ -10,3 +10,8 @@ export type NamedArrayTuple<T extends (...args: any) => any> = Parameters<T>
  * file.
  */
 export type ForwardRefComponent<P, T> = ForwardRefExoticComponent<PropsWithoutRef<P> & RefAttributes<T>>
+
+/**
+ * Similar to keyof in Typescript but with value
+ */
+export type ValueOf<T> = T[keyof T];

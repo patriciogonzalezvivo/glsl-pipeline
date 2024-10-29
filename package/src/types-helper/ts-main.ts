@@ -2,8 +2,13 @@ import * as THREE from 'three';
 
 import { RootState } from '@react-three/fiber';
 import { Assign } from 'utility-types';
+import { ValueOf } from './ts-utils'
 
 export type Uniform = { [uniform: string]: THREE.IUniform<any> }
+
+type _CubeMapUniform = 'u_cubeMap' | 'u_SH';
+
+export type CubeMapUniform = Record<_CubeMapUniform, ValueOf<Uniform>>
 
 export type MaterialConstructor = new (options: Assign<THREE.ShaderMaterialParameters, GlslPipelineReactProps>) => THREE.Material
 
@@ -85,12 +90,15 @@ export interface GlslPipelineClass extends GlslPipelineProperties {
     getBufferSize(name: string): BufferSize;
     load(frag_src: string, vert_src?: string | null): void;
     reset(): void;
+    reload(): void;
     branchMaterial(name: string | Array<string>): THREE.ShaderMaterial | THREE.Material;
     addBackground(): void;
     addBuffer(width: number, height: number): Buffers;
     addDoubleBuffer(width: number, height: number): DoubleBuffers;
     addPostprocessing(): SceneBuffers;
     setLight(light: Lights): void;
+    setCubemap(hdrUrl: string, scene: THREE.Scene): void;
+    setDefine(name: string, value: any): void;
     createRenderTarget(b: GlslPipelineRenderTargets): THREE.WebGLRenderTarget;
     updateUniforms(camera?: THREE.PerspectiveCamera | THREE.OrthographicCamera): void;
     updateBuffers(): void;

@@ -193,7 +193,8 @@ yarn build
 # For contributor, run & answers the provided questions.
 yarn changeset
 
-# To release packages, run
+# To release packages, run.
+# You may manually add your own changelog when running this command
 yarn changeset version
 
 # Then for anyone to publish, run

@@ -1,7 +1,7 @@
 {
   "name": "typescript_shader_options",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@react-three/fiber": "^8.17.10",
-    "glsl-pipeline": "^3.0.0",
+    "glsl-pipeline": "^4.0.0",
     "leva": "^0.9.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

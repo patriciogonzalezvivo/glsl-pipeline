@@ -1,5 +1,11 @@
 # glsl-pipeline
 
+## 4.0.0
+
+### Major Changes
+
+- Adding support for Cubemaps
+
 ## 3.0.0
 
 ### Major Changes
@@ -7,12 +13,15 @@
 - Updated to the latest ThreeJS & React packages using Vite in examples folder.
   - Fix issue raised from https://github.com/patriciogonzalezvivo/glsl-pipeline/issues/9. Updated the conditional statement when initialised `GlslPipeline` with this. Fix the issue by running UnsignedByteType by default for texture format (https://threejs.org/docs/#api/en/constants/Textures):
   ```tsx
-  if (renderer.extensions.has("OES_texture_float") || this.forceFloatTexture){
-      this.floatType = FloatType
-  } else if (renderer.extensions.has("OES_texture_half_float") || this.forceFloatTextureLinear) {
-      this.floatType = HalfFloatType
+  if (renderer.extensions.has("OES_texture_float") || this.forceFloatTexture) {
+    this.floatType = FloatType;
+  } else if (
+    renderer.extensions.has("OES_texture_half_float") ||
+    this.forceFloatTextureLinear
+  ) {
+    this.floatType = HalfFloatType;
   } else {
-      this.floatType = UnsignedByteType
+    this.floatType = UnsignedByteType;
   }
   ```
   - Update all examples packages to use latest ThreeJS and React packages so that it can be running smoothly.

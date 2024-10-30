@@ -1,5 +1,16 @@
 # 2d_clock
 
+## 2.0.0
+
+### Major Changes
+
+- Adding support for Cubemaps
+
+### Patch Changes
+
+- Updated dependencies
+  - glsl-pipeline@4.0.0
+
 ## 1.0.0
 
 ### Major Changes

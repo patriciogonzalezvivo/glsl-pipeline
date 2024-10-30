@@ -633,11 +633,15 @@ void main() {
 
 * `uniform mat4  u_lightMatrix`: Light Matrix for reprojecting shadows
 
+* `uniform sampler2D u_lightShadowMap`: Shadow map
+
+* `uniform samplerCube u_cubeMap`: Cubemap
+
+* `uniform vec3 u_SH[9]`: Lightprobe Spherical Harmonics
+
 * `uniform sampler2D u_scene`: color texture buffer of the scene, available on `POSTPROCESSING` subshader. [Learn more about it here](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES#buffers-and-render-passes)
 
 * `uniform sampler2D u_sceneDepth`: color texture buffer of the scene, available on `POSTPROCESSING` subshader. [Learn more about it here](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES#buffers-and-render-passes)
-
-* `uniform sampler2D u_lightShadowMap`: Shadow map
 
 * `uniform sampler2D u_buffer[number]`: extra buffers forked with the define flag `BUFFER_[number]` on a subshaders. [learn more about this here](https://github.com/patriciogonzalezvivo/glslViewer/wiki/GlslViewer-DEFINES#buffers-and-render-passes)
 

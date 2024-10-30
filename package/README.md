@@ -4,7 +4,7 @@
 
 GlslPipeline is a class that allows quick prototyping of pipelines directly from a single shader by branching it into different special stages using `#if`, `#elif`, `#else`, define flags. It also allows you to handle multiple buffers and post-processing passes using keywords (defines) such as `BUFFERS`, `DOUBLE_BUFFERS`, `BACKGROUND` and `POSTPROCESSING`.
 
-GlslPipeline also handles some basic uniforms such as `u_resolution`, `u_mouse`, `u_time`, `u_delta` and `u_frame`.
+GlslPipeline also handles some basic uniforms such as `u_resolution`, `u_mouse`, `u_time`, `u_delta` and `u_frame`. And uniforms specific for 3D Scenes such as `u_camera`, `u_cameraDistance`, `u_cameraNearClip`, `u_cameraFarClip`, `u_viewMatrix`, `u_perspectiveMatrix`, `u_light`, `u_lightColor`, `u_lightIntensity`, `u_lightShadowMap`, `u_lightMatrix`, `u_cubeMap`, `u_SH`, `u_scene`, `u_sceneDepth`, etc.
 
 All these specs are based 100% on the [glslViewer](https://github.com/patriciogonzalezvivo/glslViewer/wiki) workflow and are designed so you can start your prototypes there and then port them to WebGL using [ThreeJS](https://github.com/mrdoob/three.js) in a few seconds by just loading your shader code in GlslPipeline. 
 

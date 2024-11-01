@@ -387,13 +387,14 @@ function App() {
 ### `GlslPipelineReact` Properties
 | Properties | Type | Available Values | Default Value | Description |
 | ---------- | ---- | ---------------- | ------------- |----------- |
-| type | string | 'main' \| 'scene' | 'scene' | To determine how GlslPipeline will render. |
+| ref | React.Ref | `useRef` \| `createRef` | undefined | You can get `GlslPipeline` class returned to this `React.ref` reference. _(NOTE: If you share the same `React.ref` reference, the `GlslPipeline` class will be used on the same reference with the same material so that you can chain the material/reference value in one single render.)_ |
+| type | string | 'main' \| 'scene' | 'scene' | To determine how `GlslPipeline` will render. |
 | uniforms | object | none | - | You can insert your own uniforms here. |
 | fragmentShader | string | none | - | You must insert your own fragmentShader string here. |
 | vertexShader | string | none | [getPassThroughVertexShader()](https://github.com/patriciogonzalezvivo/glsl-pipeline/blob/main/package/src/vanilla-modules/vanilla.ts) | This is optional either you can insert your own vertexShader or just leave it empty. |
-| branch | string \| Array\<string\> | none | - | You can set your own define(s) named here. It will uppercase the string of your defined name. |
-| resize | boolean | true \| false | true | Automatically resize GlslPipelineReact or not. |
-| autoRender | boolean | true \| false | true | Automatically render GlslPipelineReact or not. |
+| branch | string \| Array\<string\> | none | - | To branch the material using `#define` glsl. This is useful if you wish to clone ShaderMaterial on specific define set here. Similar function to `branchMaterial` in `GlslPipeline` class. You may refer [material](https://github.com/patriciogonzalezvivo/glsl-pipeline/blob/main/package/src/react-modules/component/glsl-pipeline-react.tsx). _(NOTE: It will uppercase the string of your defined name.)_ |
+| resize | boolean | true \| false | true | Automatically resize `GlslPipelineReact` or not. |
+| autoRender | boolean | true \| false | true | Automatically render `GlslPipelineReact` or not. |
 | renderPriority | number | any number | 0 | `useFrame` render priority value as refer to this [documentation](https://docs.pmnd.rs/react-three-fiber/api/hooks#taking-over-the-render-loop)
 | ...props | THREE.ShaderMaterialParameters | { [key: string]: any } | - | This is an options value for `ShaderMaterial` class. You can refer more parameters here for [ShaderMaterialParameters](https://github.com/three-types/three-ts-types/blob/ba58d77ba6fa6cd0e02ef5736637677ee8d97787/types/three/src/materials/ShaderMaterial.d.ts#L6) & [MaterialParameters](https://github.com/three-types/three-ts-types/blob/ba58d77ba6fa6cd0e02ef5736637677ee8d97787/types/three/src/materials/Material.d.ts#L18C1-L18C1)
 

@@ -31,8 +31,8 @@ import {
     // RGBEEncoding,
 } from 'three';
 
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
-import { LightProbeGenerator } from 'three/examples/jsm/lights/LightProbeGenerator';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { LightProbeGenerator } from 'three/examples/jsm/lights/LightProbeGenerator.js';
 
 import { Uniform, Buffers, DoubleBuffers, SceneBuffers, GlslPipelineRenderTargets, GlslPipelineClass, Lights, CubeMapUniform } from "../types"
 

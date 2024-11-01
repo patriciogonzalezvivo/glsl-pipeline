@@ -64,7 +64,29 @@ export const GlslPipelineReact = /* @__PURE__ */ React.memo(React.forwardRef(<T 
     }, []);
 
     const pipeline = React.useMemo(() => {
-        const glsl = new GlslPipeline(gl, uniforms, props);
+        // Apply the same glsl if ref given the same glsl-pipeline reference
+        let glsl: GlslPipelineClass;
+
+        // Check if ref.current exists and instance of GlslPipeline class
+        if (ref && (ref as React.RefObject<GlslPipelineClass>).current instanceof GlslPipeline) {
+
+            // Assign to existing GlslPipeline
+            glsl = (ref as React.RefObject<GlslPipelineClass>).current as GlslPipelineClass;
+
+            // Apply uniforms if exists
+            if (uniforms) {
+                glsl.uniforms = uniforms;
+            }
+
+            // Apply options if any
+            if (props) {
+                glsl.options = props;
+            }
+
+        } else {
+            // Else initialized new GlslPipeline
+            glsl = new GlslPipeline(gl, uniforms, props);
+        }
 
         glsl.load(fragmentShader, vertexShader);
 

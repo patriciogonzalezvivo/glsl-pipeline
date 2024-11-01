@@ -13,11 +13,12 @@
   "scripts": {
     "build": "preconstruct build",
     "dev-vanilla": "preconstruct dev && yarn workspace typescript_3d_devlook dev",
-    "dev-react": "preconstruct dev && yarn workspace react_devlook dev",
+    "dev-react": "preconstruct dev && yarn workspace typescript_react_devlook dev",
     "postinstall": "preconstruct dev && manypkg check",
     "ci": "preconstruct validate && manypkg check && yarn build",
+    "lint": "tsc -p ./tsconfig.json --noEmit",
     "release": "chmod +x ./scripts/release.sh && ./scripts/release.sh",
-    "clean": "rm -rf node_modules package/dist package/r3f/dist package/node_modules package/types/dist examples/**/**/node_modules examples/**/**/package-lock.json yarn.lock package-lock.json",
+    "clean": "rm -rf node_modules package/dist package/r3f/dist package/node_modules package/types/dist examples/**/**/node_modules examples/**/**/package-lock.json",
     "update": "chmod +x ./scripts/updateAll.sh && ./scripts/updateAll.sh"
   },
   "workspaces": {

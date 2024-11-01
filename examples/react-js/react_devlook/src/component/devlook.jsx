@@ -1,8 +1,8 @@
 /* eslint-disable react/no-unknown-property */
-import { useRef, useMemo, useCallback } from "react"
-import { useThree, extend, useLoader, useGraph } from '@react-three/fiber'
-import { GlslPipelineReact, useGlslPipeline } from "glsl-pipeline/r3f"
-import { PlaneGeometry, Vector3 } from 'three'
+import { useRef, useEffect } from "react"
+import { useThree, extend, useLoader } from '@react-three/fiber'
+import { GlslPipelineReact } from "glsl-pipeline/r3f"
+import { Vector3 } from 'three'
 
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 
@@ -19,9 +19,6 @@ export default function Devlook() {
 
     const devlookRef = useRef(null);
     const floorRef = useRef(null);
-    const devlookSphere0Ref = useRef(null);
-    const devlookSphere1Ref = useRef(null);
-    const devlookbillboard0Ref = useRef(null);
     const lightRef = useRef(null);
     const { camera, gl, scene } = useThree();
 
@@ -29,31 +26,35 @@ export default function Devlook() {
         console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
     })
 
-    const { nodes, materials } = useGraph(sceneLoader)
-
-    useMemo(() => {
+    useEffect(() => {
         gl.shadowMap.enabled = true;
-        camera.position.set(3, 3, 3);
-        camera.lookAt(new Vector3(0, 1, 0));
-        if (devlookRef.current) {
-            devlookRef.current.setLight(lightRef.current);
+        camera.position.set(0, 0, 3);
+
+        if (devlookRef.current && sceneLoader.children.length > 0) {
             devlookRef.current.setCubemap("/little_paris_eiffel_tower_2k.hdr", scene)
             scene.background = devlookRef.current.uniforms.u_cubeMap.value;
             scene.environment = devlookRef.current.uniforms.u_cubeMap.value;
             // Smooth surface
-            nodes.dragon.geometry.deleteAttribute('normal');
-            nodes.dragon.geometry = BufferGeometryUtils.mergeVertices(nodes.dragon.geometry);
-            nodes.dragon.geometry.computeVertexNormals();
-            nodes.dragon.castShadow = true;
-            nodes.dragon.receiveShadow = true;
+            sceneLoader.children[0].geometry.deleteAttribute('normal');
+            sceneLoader.children[0].geometry = BufferGeometryUtils.mergeVertices(sceneLoader.children[0].geometry);
+            sceneLoader.children[0].geometry.computeVertexNormals();
+            sceneLoader.children[0].material = devlookRef.current.material;
+            sceneLoader.children[0].castShadow = true;
+            sceneLoader.children[0].receiveShadow = true;
             lightRef.current.shadow.mapSize.width = 1024;
             lightRef.current.shadow.mapSize.height = 1024;
             lightRef.current.shadow.camera.near = 0.1;
             lightRef.current.shadow.camera.far = 20;
+            devlookRef.current.setLight(lightRef.current);
         }
-    }, [])
 
-    const fragmentShader = useMemo(() => resolveLygia(/* glsl */`#ifdef GL_ES
+        if (floorRef.current) {
+            floorRef.current.rotateX(-Math.PI * 0.5);
+            floorRef.current.translate(0, -0.7, 0);
+        }
+    }, [camera, gl, sceneLoader, scene, devlookRef, floorRef])
+
+    const fragmentShader = resolveLygia(/* glsl */`#ifdef GL_ES
 precision mediump float;
 #endif
 // IBL
@@ -161,9 +162,9 @@ void main() {
     color = rgb2srgb(color);
 
     gl_FragColor = color;
-}`), []);
+}`)
 
-    const vertexShader = useMemo(() => resolveLygia(/* glsl */`#ifdef GL_ES
+    const vertexShader = resolveLygia(/* glsl */`#ifdef GL_ES
 precision mediump float;
 #endif
 uniform mat4    u_lightMatrix;
@@ -305,31 +306,33 @@ void main(void) {
     gl_Position = PROJECTION_MATRIX * VIEW_MATRIX * MODEL_MATRIX * v_position;
 
 #endif
-}`), [])
+}`)
 
     return (
         <>
             <directionalLight color={new Color(0xffffff)} ref={lightRef} position={new Vector3(0, 10, 8)} castShadow lookAt={new Vector3(0, 0, 0)} intensity={1.0} />
-            <mesh castShadow receiveShadow>
-                <mesh geometry={nodes.dragon.geometry} material={materials.dragon}/>
-                <GlslPipelineReact ref={devlookRef} fragmentShader={fragmentShader} vertexShader={vertexShader} />
-            </mesh>
             <mesh receiveShadow>
-                <planeGeometry args={[5, 5, 1, 36]} rotateX={-Math.PI * 0.5} translate={new Vector3(0, -0.7, 0)}/>
-                <GlslPipelineReact ref={floorRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'FLOOR'} />
+                <planeGeometry ref={floorRef} args={[5, 5, 1, 36]} />
+                <GlslPipelineReact ref={devlookRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'FLOOR'} />
             </mesh>
             <mesh>
                 <icosahedronGeometry args={[1, 200]} />
-                <GlslPipelineReact ref={devlookSphere0Ref} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'DEVLOOK_SPHERE_0'} />
+                <GlslPipelineReact ref={devlookRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'DEVLOOK_SPHERE_0'} />
             </mesh>
             <mesh>
                 <icosahedronGeometry args={[1, 200]} />
-                <GlslPipelineReact ref={devlookSphere1Ref} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'DEVLOOK_SPHERE_1'} />
+                <GlslPipelineReact ref={devlookRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'DEVLOOK_SPHERE_1'} />
             </mesh>
             <mesh>
                 <planeGeometry args={[1, 1]} />
-                <GlslPipelineReact ref={devlookbillboard0Ref} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'DEVLOOK_BILLBOARD_0'} transparent />
+                <GlslPipelineReact ref={devlookRef} fragmentShader={fragmentShader} vertexShader={vertexShader} branch={'DEVLOOK_BILLBOARD_0'} transparent />
+            </mesh>
+            <mesh>
+                <primitive object={sceneLoader} />
+                <GlslPipelineReact ref={devlookRef} fragmentShader={fragmentShader} vertexShader={vertexShader} />
             </mesh>
         </>
     )
 }
+
+useLoader.preload(OBJLoader, '/dragon.obj')

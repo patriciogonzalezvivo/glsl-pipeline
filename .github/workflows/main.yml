@@ -17,7 +17,14 @@ jobs:
       - name: Set up Yarn cache
         uses: c-hive/gha-yarn-cache@v2
 
-      - name: Install and Build 🔨
+      - name: Install
         run: |
           yarn
+
+      - name: Check lint
+        run: |
+          yarn lint
+
+      - name: Build 🔨
+        run: |
           yarn ci

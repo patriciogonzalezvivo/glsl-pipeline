@@ -13,7 +13,7 @@
   "scripts": {
     "build": "preconstruct build",
     "dev-vanilla": "preconstruct dev && yarn workspace typescript_3d_devlook dev",
-    "dev-react": "preconstruct dev && yarn workspace react_devlook dev",
+    "dev-react": "preconstruct dev && yarn workspace typescript_react_devlook dev",
     "postinstall": "preconstruct dev && manypkg check",
     "ci": "preconstruct validate && manypkg check && yarn build",
     "lint": "tsc -p ./tsconfig.json --noEmit",

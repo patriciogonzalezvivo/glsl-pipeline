@@ -1,5 +1,12 @@
 # glsl-pipeline
 
+## 4.1.0
+
+### Minor Changes
+
+- - React cubemap support
+  - Added examples for React Devlook with typescript supported
+
 ## 4.0.0
 
 ### Major Changes

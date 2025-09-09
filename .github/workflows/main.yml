@@ -9,22 +9,22 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          submodules: 'true'
+          node-version: "20"
 
-      - name: Set up Yarn cache
-        uses: c-hive/gha-yarn-cache@v2
+      - name: Install Yarn
+        run: npm install -g yarn
 
-      - name: Install
-        run: |
-          yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Check lint
-        run: |
-          yarn lint
+        run: yarn lint
 
       - name: Build 🔨
-        run: |
-          yarn ci
+        run: yarn ci

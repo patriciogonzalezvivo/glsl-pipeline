@@ -391,7 +391,7 @@ class GlslPipeline implements GlslPipelineClass {
             h *= this.renderer.domElement.height;
         }
 
-        let depth: DepthTexture | undefined = undefined;
+        let depth: DepthTexture | null = null;
         if (b.depth)
             depth = /* @__PURE__ */ new DepthTexture(w, h);
 

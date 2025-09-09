@@ -9,13 +9,6 @@ module.exports = {
                 isTSX: true,
                 allExtensions: true
             }
-        ],
-        [
-            "minify",
-            {
-                removeConsole: true,
-                removeDebugger: true
-            }
         ]
     ]
 }

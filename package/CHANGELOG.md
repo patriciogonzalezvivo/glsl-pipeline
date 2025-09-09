@@ -1,5 +1,11 @@
 # glsl-pipeline
 
+## 4.1.1
+
+### Patch Changes
+
+- Fix Render Target that thrown error if set 'depthTexture' to undefined.
+
 ## 4.1.0
 
 ### Minor Changes
